@@ -22,9 +22,7 @@ This project is a simplified Java compiler developed using **Flex** and **Bison*
 
 ## 🧰 Requirements
 
-- [Flex](https://github.com/westes/flex)  
-- [Bison](https://www.gnu.org/software/bison/)  
-- [GCC](https://gcc.gnu.org/)
+Flex, Bison, GCC
 
 ---
 
