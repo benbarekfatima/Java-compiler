@@ -1,0 +1,72 @@
+public class OptimizationTests {
+    public static void main(String[] args) {
+        // ---------------------------
+        // 1. Propagation de copie
+        /*Si deux variables sont égales on
+        remplace une par l’autre afin de
+        l’éliminer après*/
+        // ---------------------------
+        {
+            p1= p2 ;
+            p3= 4* p2 ;             // va devenir p3= 4* p1 ; 
+
+        }
+
+        // ---------------------------
+        // 2. Propagation d'expression
+        // Si une variable stocke une expression mais n'est utilisée qu'une seule fois, alors il est inutile de la
+        // garder. On peut directement remplacer son utilisation par l'expression qu'elle contenait
+        // ---------------------------
+        {
+
+            e1= 4+1;
+            e3= 4* e1 ; // e3 = 4*(4+1) 
+           
+        }
+
+        // ---------------------------
+        // 3. Suppression d'expression commune
+        // Si une expression E apparaît plusieurs fois et que les variables qui la composent n’ont pas été
+        // modifiées, on remplace ses occurrences suivantes par la variable qui stockait E
+        // ---------------------------
+        {
+            
+            t1 = a + b;
+            t2 = c * t1;
+            t3 = a + b; // Redondant, car déjà calculé dans t1
+            t4 = t3 * e; // on remplace ici t3 par t1 , on remplace lutilisation de lexpression affecté a t1 avec t1 
+        }
+
+        // ---------------------------
+        // 4. Simplification d'opération
+        // ---------------------------
+        {
+
+            mult = u*2;     // mult = u + u
+
+            b = a - a;      
+            x = b - 4;      // x = -4
+
+            i = 0 + j;
+            k = i + 2;      // k = j + 2
+
+            add = var + 1 ; 
+            sub = add - 1 ;     // sub = var
+
+            x = y * 1;
+            x = y / 1;
+            
+
+        }
+
+        // ---------------------------
+        // 5. Élimination de code inutile
+        // ---------------------------
+        {
+            unused1 = 0;
+            unused2 = unused1 + 456;       // unused2 = 456 et unused1 revient inutile car elle contient une val qui ne sera jms utilisée
+            shown = 42;
+            System.out.println(show);
+        }
+    }
+}

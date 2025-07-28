@@ -1,0 +1,4844 @@
+Terminals unused in grammar
+
+   '+'
+   '-'
+   '*'
+   '/'
+
+
+Grammaire
+
+    0 $accept: program $end
+
+    1 program: class_decl_list END_OF_FILE
+
+    2 class_decl_list: class_decl
+    3                | class_decl_list class_decl
+
+    4 $@1: /* vide */
+
+    5 class_decl: mc_public_opt mc_class id accolade_o $@1 class_body accolade_f
+
+    6 mc_public_opt: /* vide */
+    7              | mc_public
+
+    8 class_body: /* vide */
+    9           | class_body_decl_list
+
+   10 class_body_decl_list: class_body_decl
+   11                     | class_body_decl_list class_body_decl
+
+   12 class_body_decl: var_decl
+   13                | method_decl
+   14                | constructor_decl
+   15                | block
+
+   16 var_decl: type var_decl_list pt_virgule
+   17         | type_array var_decl_list pt_virgule
+
+   18 var_decl_list: id var_decl_suffix_opt
+   19              | var_decl_list virgule id
+
+   20 var_decl_suffix_opt: /* vide */
+   21                    | affectation expression
+
+   22 var_decl_for: type id for_var_decl_suffix
+
+   23 for_var_decl_suffix: affectation expression
+   24                    | /* vide */
+
+   25 $@2: /* vide */
+
+   26 method_decl: visibility_static mc_void id $@2 parenthese_o param_list_opt parenthese_f throws_clause_opt block
+
+   27 $@3: /* vide */
+
+   28 method_decl: visibility_static type id $@3 parenthese_o param_list_opt parenthese_f throws_clause_opt block
+
+   29 $@4: /* vide */
+
+   30 method_decl: mc_void id $@4 parenthese_o param_list_opt parenthese_f throws_clause_opt block
+
+   31 $@5: /* vide */
+
+   32 method_decl: type id $@5 parenthese_o param_list_opt parenthese_f throws_clause_opt block
+
+   33 $@6: /* vide */
+
+   34 constructor_decl: visibility_static id $@6 parenthese_o param_list_opt parenthese_f block
+
+   35 $@7: /* vide */
+
+   36 constructor_decl: id $@7 parenthese_o param_list_opt parenthese_f block
+
+   37 throws_clause_opt: /* vide */
+   38                  | mc_throws exception_list
+
+   39 exception_list: type
+   40               | exception_list virgule type
+
+   41 visibility_static: visibility_actual
+   42                  | mc_static
+   43                  | visibility_actual mc_static
+   44                  | mc_static visibility_actual
+
+   45 visibility_actual: mc_public
+   46                  | mc_private
+   47                  | mc_protected
+
+   48 type: mc_int
+   49     | mc_float
+   50     | mc_double
+   51     | mc_char
+   52     | mc_boolean
+   53     | mc_string
+   54     | mc_excp
+   55     | id
+
+   56 type_array: type crochet_o crochet_f
+   57           | type crochet_o crochet_f crochet_o crochet_f
+
+   58 param_list_opt: /* vide */
+   59               | param_list
+
+   60 param_list: param
+   61           | param_list virgule param
+
+   62 param: type id
+   63      | type_array id
+
+   64 block: accolade_o statement_list_opt accolade_f
+
+   65 statement_list_opt: /* vide */
+   66                   | statement_list
+
+   67 statement_list: statement
+   68               | statement_list statement
+
+   69 statement: block
+   70          | var_decl
+   71          | if_statement
+   72          | while_statement
+   73          | do_statement
+   74          | for_statement
+   75          | switch_statement
+   76          | return_statement
+   77          | throw_statement
+   78          | try_catch_statement
+   79          | mc_print parenthese_o expression_opt parenthese_f pt_virgule
+   80          | assignment_statement pt_virgule
+   81          | postfix_statement pt_virgule
+
+   82 postfix_statement: primary_expression parenthese_o argument_list_opt parenthese_f
+   83                  | postfix_expression postfix_suffix
+   84                  | postfix_expression incrementation
+
+   85 if_statement: mc_if parenthese_o expression parenthese_f statement
+   86             | mc_if parenthese_o expression parenthese_f statement mc_else statement
+
+   87 while_statement: mc_while parenthese_o expression parenthese_f statement
+
+   88 do_statement: mc_do statement mc_while parenthese_o expression parenthese_f pt_virgule
+
+   89 for_statement: mc_for parenthese_o for_init_opt expression_opt pt_virgule for_update_opt parenthese_f statement
+
+   90 for_init_opt: pt_virgule
+   91             | expression pt_virgule
+   92             | var_decl_for pt_virgule
+
+   93 expression_opt: /* vide */
+   94               | expression
+
+   95 for_update_opt: /* vide */
+   96               | expression
+
+   97 switch_statement: mc_switch parenthese_o expression parenthese_f accolade_o case_list_opt default_statement_opt accolade_f
+
+   98 case_list_opt: /* vide */
+   99              | case_list
+
+  100 case_list: case_statement
+  101          | case_list case_statement
+
+  102 case_statement: mc_case constant deux_points statement_list_opt break_opt
+
+  103 break_opt: /* vide */
+  104          | mc_break pt_virgule
+
+  105 default_statement_opt: /* vide */
+  106                      | default_statement
+
+  107 default_statement: mc_default deux_points statement_list_opt
+
+  108 constant: integer
+  109         | real
+  110         | mc_true
+  111         | mc_false
+  112         | id
+  113         | chaine
+  114         | caractere
+
+  115 return_statement: mc_return pt_virgule
+  116                 | mc_return expression pt_virgule
+
+  117 throw_statement: mc_throw expression pt_virgule
+
+  118 try_catch_statement: mc_try block catch_list finally_opt
+
+  119 catch_list: catch_clause
+  120           | catch_list catch_clause
+
+  121 $@8: /* vide */
+
+  122 catch_clause: mc_catch parenthese_o type id parenthese_f $@8 block
+
+  123 finally_opt: /* vide */
+  124            | mc_finally block
+
+  125 expression: logical_or_expression
+
+  126 assignment_expression: logical_or_expression
+  127                      | assignment_statement
+
+  128 assignment_statement: postfix_expression affectation assignment_expression
+  129                     | postfix_expression addition_assignment assignment_expression
+
+  130 logical_or_expression: logical_and_expression
+  131                      | logical_or_expression ou logical_and_expression
+
+  132 logical_and_expression: equality_expression
+  133                       | logical_and_expression et equality_expression
+
+  134 equality_expression: relational_expression
+  135                    | equality_expression egal relational_expression
+  136                    | equality_expression different relational_expression
+
+  137 relational_expression: additive_expression
+  138                      | relational_expression inf additive_expression
+  139                      | relational_expression sup additive_expression
+  140                      | relational_expression inf_egal additive_expression
+  141                      | relational_expression sup_egal additive_expression
+
+  142 additive_expression: multiplicative_expression
+  143                    | additive_expression addition multiplicative_expression
+  144                    | additive_expression soustraction multiplicative_expression
+
+  145 multiplicative_expression: unary_expression
+  146                          | multiplicative_expression multiplication unary_expression
+  147                          | multiplicative_expression division unary_expression
+  148                          | multiplicative_expression mod unary_expression
+
+  149 unary_expression: postfix_expression
+  150                 | pt_exclamation unary_expression
+  151                 | soustraction unary_expression
+  152                 | addition unary_expression
+  153                 | incrementation unary_expression
+
+  154 postfix_expression: primary_expression call_suffix
+  155                   | postfix_expression postfix_suffix
+  156                   | postfix_expression incrementation
+
+  157 call_suffix: /* vide */
+  158            | parenthese_o argument_list_opt parenthese_f
+
+  159 postfix_suffix: point id call_suffix
+
+  160 primary_expression: id
+  161                   | integer
+  162                   | real
+  163                   | mc_true
+  164                   | mc_false
+  165                   | caractere
+  166                   | chaine
+  167                   | mc_this
+  168                   | mc_new id parenthese_o argument_list_opt parenthese_f
+  169                   | mc_new mc_excp parenthese_o argument_list_opt parenthese_f
+  170                   | parenthese_o expression_list_opt parenthese_f
+  171                   | accolade_o expression_list accolade_f
+  172                   | mc_new type crochet_o expression crochet_f
+  173                   | mc_new type crochet_o expression crochet_f crochet_o expression crochet_f
+
+  174 argument_list_opt: /* vide */
+  175                  | argument_list
+
+  176 argument_list: expression
+  177              | argument_list virgule expression
+
+  178 expression_list: expression
+  179                | expression_list virgule expression
+
+  180 expression_list_opt: /* vide */
+  181                    | expression_list
+
+
+Terminaux, suivis des règles où ils apparaissent
+
+$end (0) 0
+'*' (42)
+'+' (43)
+'-' (45)
+'/' (47)
+error (256)
+mc_class (258) 5
+mc_int (259) 48
+mc_float (260) 49
+mc_double (261) 50
+mc_char (262) 51
+mc_boolean (263) 52
+mc_string (264) 53
+mc_excp (265) 54 169
+mc_if (266) 85 86
+mc_else (267) 86
+mc_for (268) 89
+mc_while (269) 87 88
+mc_do (270) 88
+mc_switch (271) 97
+mc_case (272) 102
+mc_default (273) 107
+mc_break (274) 104
+mc_return (275) 115 116
+mc_public (276) 7 45
+mc_static (277) 42 43 44
+mc_void (278) 26 30
+mc_private (279) 46
+mc_protected (280) 47
+mc_try (281) 118
+mc_catch (282) 122
+mc_finally (283) 124
+mc_new (284) 168 169 172 173
+mc_throws (285) 38
+mc_throw (286) 117
+mc_this (287) 167
+mc_true (288) 110 163
+mc_false (289) 111 164
+mc_print (290) 79
+chaine (291) 113 166
+caractere (292) 114 165
+id (293) 5 18 19 22 26 28 30 32 34 36 55 62 63 112 122 159 160 168
+integer (294) 108 161
+real (295) 109 162
+addition (296) 143 152
+soustraction (297) 144 151
+multiplication (298) 146
+division (299) 147
+mod (300) 148
+affectation (301) 21 23 128
+sup (302) 139
+inf (303) 138
+incrementation (304) 84 153 156
+inf_egal (305) 140
+sup_egal (306) 141
+egal (307) 135
+different (308) 136
+et (309) 133
+ou (310) 131
+pt_exclamation (311) 150
+addition_assignment (312) 129
+point (313) 159
+pt_virgule (314) 16 17 79 80 81 88 89 90 91 92 104 115 116 117
+deux_points (315) 102 107
+virgule (316) 19 40 61 177 179
+accolade_o (317) 5 64 97 171
+accolade_f (318) 5 64 97 171
+parenthese_o (319) 26 28 30 32 34 36 79 82 85 86 87 88 89 97 122 158
+    168 169 170
+parenthese_f (320) 26 28 30 32 34 36 79 82 85 86 87 88 89 97 122 158
+    168 169 170
+crochet_o (321) 56 57 172 173
+crochet_f (322) 56 57 172 173
+IFX (323)
+END_OF_FILE (324) 1
+
+
+Non-terminaux, suivis des règles où ils apparaissent
+
+$accept (74)
+    à gauche: 0
+program (75)
+    à gauche: 1, à droite: 0
+class_decl_list (76)
+    à gauche: 2 3, à droite: 1 3
+class_decl (77)
+    à gauche: 5, à droite: 2 3
+$@1 (78)
+    à gauche: 4, à droite: 5
+mc_public_opt (79)
+    à gauche: 6 7, à droite: 5
+class_body (80)
+    à gauche: 8 9, à droite: 5
+class_body_decl_list (81)
+    à gauche: 10 11, à droite: 9 11
+class_body_decl (82)
+    à gauche: 12 13 14 15, à droite: 10 11
+var_decl (83)
+    à gauche: 16 17, à droite: 12 70
+var_decl_list (84)
+    à gauche: 18 19, à droite: 16 17 19
+var_decl_suffix_opt (85)
+    à gauche: 20 21, à droite: 18
+var_decl_for (86)
+    à gauche: 22, à droite: 92
+for_var_decl_suffix (87)
+    à gauche: 23 24, à droite: 22
+method_decl (88)
+    à gauche: 26 28 30 32, à droite: 13
+$@2 (89)
+    à gauche: 25, à droite: 26
+$@3 (90)
+    à gauche: 27, à droite: 28
+$@4 (91)
+    à gauche: 29, à droite: 30
+$@5 (92)
+    à gauche: 31, à droite: 32
+constructor_decl (93)
+    à gauche: 34 36, à droite: 14
+$@6 (94)
+    à gauche: 33, à droite: 34
+$@7 (95)
+    à gauche: 35, à droite: 36
+throws_clause_opt (96)
+    à gauche: 37 38, à droite: 26 28 30 32
+exception_list (97)
+    à gauche: 39 40, à droite: 38 40
+visibility_static (98)
+    à gauche: 41 42 43 44, à droite: 26 28 34
+visibility_actual (99)
+    à gauche: 45 46 47, à droite: 41 43 44
+type (100)
+    à gauche: 48 49 50 51 52 53 54 55, à droite: 16 22 28 32 39 40
+    56 57 62 122 172 173
+type_array (101)
+    à gauche: 56 57, à droite: 17 63
+param_list_opt (102)
+    à gauche: 58 59, à droite: 26 28 30 32 34 36
+param_list (103)
+    à gauche: 60 61, à droite: 59 61
+param (104)
+    à gauche: 62 63, à droite: 60 61
+block (105)
+    à gauche: 64, à droite: 15 26 28 30 32 34 36 69 118 122 124
+statement_list_opt (106)
+    à gauche: 65 66, à droite: 64 102 107
+statement_list (107)
+    à gauche: 67 68, à droite: 66 68
+statement (108)
+    à gauche: 69 70 71 72 73 74 75 76 77 78 79 80 81, à droite: 67
+    68 85 86 87 88 89
+postfix_statement (109)
+    à gauche: 82 83 84, à droite: 81
+if_statement (110)
+    à gauche: 85 86, à droite: 71
+while_statement (111)
+    à gauche: 87, à droite: 72
+do_statement (112)
+    à gauche: 88, à droite: 73
+for_statement (113)
+    à gauche: 89, à droite: 74
+for_init_opt (114)
+    à gauche: 90 91 92, à droite: 89
+expression_opt (115)
+    à gauche: 93 94, à droite: 79 89
+for_update_opt (116)
+    à gauche: 95 96, à droite: 89
+switch_statement (117)
+    à gauche: 97, à droite: 75
+case_list_opt (118)
+    à gauche: 98 99, à droite: 97
+case_list (119)
+    à gauche: 100 101, à droite: 99 101
+case_statement (120)
+    à gauche: 102, à droite: 100 101
+break_opt (121)
+    à gauche: 103 104, à droite: 102
+default_statement_opt (122)
+    à gauche: 105 106, à droite: 97
+default_statement (123)
+    à gauche: 107, à droite: 106
+constant (124)
+    à gauche: 108 109 110 111 112 113 114, à droite: 102
+return_statement (125)
+    à gauche: 115 116, à droite: 76
+throw_statement (126)
+    à gauche: 117, à droite: 77
+try_catch_statement (127)
+    à gauche: 118, à droite: 78
+catch_list (128)
+    à gauche: 119 120, à droite: 118 120
+catch_clause (129)
+    à gauche: 122, à droite: 119 120
+$@8 (130)
+    à gauche: 121, à droite: 122
+finally_opt (131)
+    à gauche: 123 124, à droite: 118
+expression (132)
+    à gauche: 125, à droite: 21 23 85 86 87 88 91 94 96 97 116 117
+    172 173 176 177 178 179
+assignment_expression (133)
+    à gauche: 126 127, à droite: 128 129
+assignment_statement (134)
+    à gauche: 128 129, à droite: 80 127
+logical_or_expression (135)
+    à gauche: 130 131, à droite: 125 126 131
+logical_and_expression (136)
+    à gauche: 132 133, à droite: 130 131 133
+equality_expression (137)
+    à gauche: 134 135 136, à droite: 132 133 135 136
+relational_expression (138)
+    à gauche: 137 138 139 140 141, à droite: 134 135 136 138 139 140
+    141
+additive_expression (139)
+    à gauche: 142 143 144, à droite: 137 138 139 140 141 143 144
+multiplicative_expression (140)
+    à gauche: 145 146 147 148, à droite: 142 143 144 146 147 148
+unary_expression (141)
+    à gauche: 149 150 151 152 153, à droite: 145 146 147 148 150 151
+    152 153
+postfix_expression (142)
+    à gauche: 154 155 156, à droite: 83 84 128 129 149 155 156
+call_suffix (143)
+    à gauche: 157 158, à droite: 154 159
+postfix_suffix (144)
+    à gauche: 159, à droite: 83 155
+primary_expression (145)
+    à gauche: 160 161 162 163 164 165 166 167 168 169 170 171 172 173,
+    à droite: 82 154
+argument_list_opt (146)
+    à gauche: 174 175, à droite: 82 158 168 169
+argument_list (147)
+    à gauche: 176 177, à droite: 175 177
+expression_list (148)
+    à gauche: 178 179, à droite: 171 179 181
+expression_list_opt (149)
+    à gauche: 180 181, à droite: 170
+
+
+état 0
+
+    0 $accept: . program $end
+
+    mc_public  décalage et aller à l'état 1
+
+    $défaut  réduction par utilisation de la règle 6 (mc_public_opt)
+
+    program          aller à l'état 2
+    class_decl_list  aller à l'état 3
+    class_decl       aller à l'état 4
+    mc_public_opt    aller à l'état 5
+
+
+état 1
+
+    7 mc_public_opt: mc_public .
+
+    $défaut  réduction par utilisation de la règle 7 (mc_public_opt)
+
+
+état 2
+
+    0 $accept: program . $end
+
+    $end  décalage et aller à l'état 6
+
+
+état 3
+
+    1 program: class_decl_list . END_OF_FILE
+    3 class_decl_list: class_decl_list . class_decl
+
+    mc_public    décalage et aller à l'état 1
+    END_OF_FILE  décalage et aller à l'état 7
+
+    $défaut  réduction par utilisation de la règle 6 (mc_public_opt)
+
+    class_decl     aller à l'état 8
+    mc_public_opt  aller à l'état 5
+
+
+état 4
+
+    2 class_decl_list: class_decl .
+
+    $défaut  réduction par utilisation de la règle 2 (class_decl_list)
+
+
+état 5
+
+    5 class_decl: mc_public_opt . mc_class id accolade_o $@1 class_body accolade_f
+
+    mc_class  décalage et aller à l'état 9
+
+
+état 6
+
+    0 $accept: program $end .
+
+    $défaut  accepter
+
+
+état 7
+
+    1 program: class_decl_list END_OF_FILE .
+
+    $défaut  réduction par utilisation de la règle 1 (program)
+
+
+état 8
+
+    3 class_decl_list: class_decl_list class_decl .
+
+    $défaut  réduction par utilisation de la règle 3 (class_decl_list)
+
+
+état 9
+
+    5 class_decl: mc_public_opt mc_class . id accolade_o $@1 class_body accolade_f
+
+    id  décalage et aller à l'état 10
+
+
+état 10
+
+    5 class_decl: mc_public_opt mc_class id . accolade_o $@1 class_body accolade_f
+
+    accolade_o  décalage et aller à l'état 11
+
+
+état 11
+
+    5 class_decl: mc_public_opt mc_class id accolade_o . $@1 class_body accolade_f
+
+    $défaut  réduction par utilisation de la règle 4 ($@1)
+
+    $@1  aller à l'état 12
+
+
+état 12
+
+    5 class_decl: mc_public_opt mc_class id accolade_o $@1 . class_body accolade_f
+
+    mc_int        décalage et aller à l'état 13
+    mc_float      décalage et aller à l'état 14
+    mc_double     décalage et aller à l'état 15
+    mc_char       décalage et aller à l'état 16
+    mc_boolean    décalage et aller à l'état 17
+    mc_string     décalage et aller à l'état 18
+    mc_excp       décalage et aller à l'état 19
+    mc_public     décalage et aller à l'état 20
+    mc_static     décalage et aller à l'état 21
+    mc_void       décalage et aller à l'état 22
+    mc_private    décalage et aller à l'état 23
+    mc_protected  décalage et aller à l'état 24
+    id            décalage et aller à l'état 25
+    accolade_o    décalage et aller à l'état 26
+
+    $défaut  réduction par utilisation de la règle 8 (class_body)
+
+    class_body            aller à l'état 27
+    class_body_decl_list  aller à l'état 28
+    class_body_decl       aller à l'état 29
+    var_decl              aller à l'état 30
+    method_decl           aller à l'état 31
+    constructor_decl      aller à l'état 32
+    visibility_static     aller à l'état 33
+    visibility_actual     aller à l'état 34
+    type                  aller à l'état 35
+    type_array            aller à l'état 36
+    block                 aller à l'état 37
+
+
+état 13
+
+   48 type: mc_int .
+
+    $défaut  réduction par utilisation de la règle 48 (type)
+
+
+état 14
+
+   49 type: mc_float .
+
+    $défaut  réduction par utilisation de la règle 49 (type)
+
+
+état 15
+
+   50 type: mc_double .
+
+    $défaut  réduction par utilisation de la règle 50 (type)
+
+
+état 16
+
+   51 type: mc_char .
+
+    $défaut  réduction par utilisation de la règle 51 (type)
+
+
+état 17
+
+   52 type: mc_boolean .
+
+    $défaut  réduction par utilisation de la règle 52 (type)
+
+
+état 18
+
+   53 type: mc_string .
+
+    $défaut  réduction par utilisation de la règle 53 (type)
+
+
+état 19
+
+   54 type: mc_excp .
+
+    $défaut  réduction par utilisation de la règle 54 (type)
+
+
+état 20
+
+   45 visibility_actual: mc_public .
+
+    $défaut  réduction par utilisation de la règle 45 (visibility_actual)
+
+
+état 21
+
+   42 visibility_static: mc_static .
+   44                  | mc_static . visibility_actual
+
+    mc_public     décalage et aller à l'état 20
+    mc_private    décalage et aller à l'état 23
+    mc_protected  décalage et aller à l'état 24
+
+    $défaut  réduction par utilisation de la règle 42 (visibility_static)
+
+    visibility_actual  aller à l'état 38
+
+
+état 22
+
+   30 method_decl: mc_void . id $@4 parenthese_o param_list_opt parenthese_f throws_clause_opt block
+
+    id  décalage et aller à l'état 39
+
+
+état 23
+
+   46 visibility_actual: mc_private .
+
+    $défaut  réduction par utilisation de la règle 46 (visibility_actual)
+
+
+état 24
+
+   47 visibility_actual: mc_protected .
+
+    $défaut  réduction par utilisation de la règle 47 (visibility_actual)
+
+
+état 25
+
+   36 constructor_decl: id . $@7 parenthese_o param_list_opt parenthese_f block
+   55 type: id .
+
+    parenthese_o  réduction par utilisation de la règle 35 ($@7)
+    $défaut       réduction par utilisation de la règle 55 (type)
+
+    $@7  aller à l'état 40
+
+
+état 26
+
+   64 block: accolade_o . statement_list_opt accolade_f
+
+    mc_int        décalage et aller à l'état 13
+    mc_float      décalage et aller à l'état 14
+    mc_double     décalage et aller à l'état 15
+    mc_char       décalage et aller à l'état 16
+    mc_boolean    décalage et aller à l'état 17
+    mc_string     décalage et aller à l'état 18
+    mc_excp       décalage et aller à l'état 19
+    mc_if         décalage et aller à l'état 41
+    mc_for        décalage et aller à l'état 42
+    mc_while      décalage et aller à l'état 43
+    mc_do         décalage et aller à l'état 44
+    mc_switch     décalage et aller à l'état 45
+    mc_return     décalage et aller à l'état 46
+    mc_try        décalage et aller à l'état 47
+    mc_new        décalage et aller à l'état 48
+    mc_throw      décalage et aller à l'état 49
+    mc_this       décalage et aller à l'état 50
+    mc_true       décalage et aller à l'état 51
+    mc_false      décalage et aller à l'état 52
+    mc_print      décalage et aller à l'état 53
+    chaine        décalage et aller à l'état 54
+    caractere     décalage et aller à l'état 55
+    id            décalage et aller à l'état 56
+    integer       décalage et aller à l'état 57
+    real          décalage et aller à l'état 58
+    accolade_o    décalage et aller à l'état 59
+    parenthese_o  décalage et aller à l'état 60
+
+    $défaut  réduction par utilisation de la règle 65 (statement_list_opt)
+
+    var_decl              aller à l'état 61
+    type                  aller à l'état 62
+    type_array            aller à l'état 36
+    block                 aller à l'état 63
+    statement_list_opt    aller à l'état 64
+    statement_list        aller à l'état 65
+    statement             aller à l'état 66
+    postfix_statement     aller à l'état 67
+    if_statement          aller à l'état 68
+    while_statement       aller à l'état 69
+    do_statement          aller à l'état 70
+    for_statement         aller à l'état 71
+    switch_statement      aller à l'état 72
+    return_statement      aller à l'état 73
+    throw_statement       aller à l'état 74
+    try_catch_statement   aller à l'état 75
+    assignment_statement  aller à l'état 76
+    postfix_expression    aller à l'état 77
+    primary_expression    aller à l'état 78
+
+
+état 27
+
+    5 class_decl: mc_public_opt mc_class id accolade_o $@1 class_body . accolade_f
+
+    accolade_f  décalage et aller à l'état 79
+
+
+état 28
+
+    9 class_body: class_body_decl_list .
+   11 class_body_decl_list: class_body_decl_list . class_body_decl
+
+    mc_int        décalage et aller à l'état 13
+    mc_float      décalage et aller à l'état 14
+    mc_double     décalage et aller à l'état 15
+    mc_char       décalage et aller à l'état 16
+    mc_boolean    décalage et aller à l'état 17
+    mc_string     décalage et aller à l'état 18
+    mc_excp       décalage et aller à l'état 19
+    mc_public     décalage et aller à l'état 20
+    mc_static     décalage et aller à l'état 21
+    mc_void       décalage et aller à l'état 22
+    mc_private    décalage et aller à l'état 23
+    mc_protected  décalage et aller à l'état 24
+    id            décalage et aller à l'état 25
+    accolade_o    décalage et aller à l'état 26
+
+    $défaut  réduction par utilisation de la règle 9 (class_body)
+
+    class_body_decl    aller à l'état 80
+    var_decl           aller à l'état 30
+    method_decl        aller à l'état 31
+    constructor_decl   aller à l'état 32
+    visibility_static  aller à l'état 33
+    visibility_actual  aller à l'état 34
+    type               aller à l'état 35
+    type_array         aller à l'état 36
+    block              aller à l'état 37
+
+
+état 29
+
+   10 class_body_decl_list: class_body_decl .
+
+    $défaut  réduction par utilisation de la règle 10 (class_body_decl_list)
+
+
+état 30
+
+   12 class_body_decl: var_decl .
+
+    $défaut  réduction par utilisation de la règle 12 (class_body_decl)
+
+
+état 31
+
+   13 class_body_decl: method_decl .
+
+    $défaut  réduction par utilisation de la règle 13 (class_body_decl)
+
+
+état 32
+
+   14 class_body_decl: constructor_decl .
+
+    $défaut  réduction par utilisation de la règle 14 (class_body_decl)
+
+
+état 33
+
+   26 method_decl: visibility_static . mc_void id $@2 parenthese_o param_list_opt parenthese_f throws_clause_opt block
+   28            | visibility_static . type id $@3 parenthese_o param_list_opt parenthese_f throws_clause_opt block
+   34 constructor_decl: visibility_static . id $@6 parenthese_o param_list_opt parenthese_f block
+
+    mc_int      décalage et aller à l'état 13
+    mc_float    décalage et aller à l'état 14
+    mc_double   décalage et aller à l'état 15
+    mc_char     décalage et aller à l'état 16
+    mc_boolean  décalage et aller à l'état 17
+    mc_string   décalage et aller à l'état 18
+    mc_excp     décalage et aller à l'état 19
+    mc_void     décalage et aller à l'état 81
+    id          décalage et aller à l'état 82
+
+    type  aller à l'état 83
+
+
+état 34
+
+   41 visibility_static: visibility_actual .
+   43                  | visibility_actual . mc_static
+
+    mc_static  décalage et aller à l'état 84
+
+    $défaut  réduction par utilisation de la règle 41 (visibility_static)
+
+
+état 35
+
+   16 var_decl: type . var_decl_list pt_virgule
+   32 method_decl: type . id $@5 parenthese_o param_list_opt parenthese_f throws_clause_opt block
+   56 type_array: type . crochet_o crochet_f
+   57           | type . crochet_o crochet_f crochet_o crochet_f
+
+    id         décalage et aller à l'état 85
+    crochet_o  décalage et aller à l'état 86
+
+    var_decl_list  aller à l'état 87
+
+
+état 36
+
+   17 var_decl: type_array . var_decl_list pt_virgule
+
+    id  décalage et aller à l'état 88
+
+    var_decl_list  aller à l'état 89
+
+
+état 37
+
+   15 class_body_decl: block .
+
+    $défaut  réduction par utilisation de la règle 15 (class_body_decl)
+
+
+état 38
+
+   44 visibility_static: mc_static visibility_actual .
+
+    $défaut  réduction par utilisation de la règle 44 (visibility_static)
+
+
+état 39
+
+   30 method_decl: mc_void id . $@4 parenthese_o param_list_opt parenthese_f throws_clause_opt block
+
+    $défaut  réduction par utilisation de la règle 29 ($@4)
+
+    $@4  aller à l'état 90
+
+
+état 40
+
+   36 constructor_decl: id $@7 . parenthese_o param_list_opt parenthese_f block
+
+    parenthese_o  décalage et aller à l'état 91
+
+
+état 41
+
+   85 if_statement: mc_if . parenthese_o expression parenthese_f statement
+   86             | mc_if . parenthese_o expression parenthese_f statement mc_else statement
+
+    parenthese_o  décalage et aller à l'état 92
+
+
+état 42
+
+   89 for_statement: mc_for . parenthese_o for_init_opt expression_opt pt_virgule for_update_opt parenthese_f statement
+
+    parenthese_o  décalage et aller à l'état 93
+
+
+état 43
+
+   87 while_statement: mc_while . parenthese_o expression parenthese_f statement
+
+    parenthese_o  décalage et aller à l'état 94
+
+
+état 44
+
+   88 do_statement: mc_do . statement mc_while parenthese_o expression parenthese_f pt_virgule
+
+    mc_int        décalage et aller à l'état 13
+    mc_float      décalage et aller à l'état 14
+    mc_double     décalage et aller à l'état 15
+    mc_char       décalage et aller à l'état 16
+    mc_boolean    décalage et aller à l'état 17
+    mc_string     décalage et aller à l'état 18
+    mc_excp       décalage et aller à l'état 19
+    mc_if         décalage et aller à l'état 41
+    mc_for        décalage et aller à l'état 42
+    mc_while      décalage et aller à l'état 43
+    mc_do         décalage et aller à l'état 44
+    mc_switch     décalage et aller à l'état 45
+    mc_return     décalage et aller à l'état 46
+    mc_try        décalage et aller à l'état 47
+    mc_new        décalage et aller à l'état 48
+    mc_throw      décalage et aller à l'état 49
+    mc_this       décalage et aller à l'état 50
+    mc_true       décalage et aller à l'état 51
+    mc_false      décalage et aller à l'état 52
+    mc_print      décalage et aller à l'état 53
+    chaine        décalage et aller à l'état 54
+    caractere     décalage et aller à l'état 55
+    id            décalage et aller à l'état 56
+    integer       décalage et aller à l'état 57
+    real          décalage et aller à l'état 58
+    accolade_o    décalage et aller à l'état 59
+    parenthese_o  décalage et aller à l'état 60
+
+    var_decl              aller à l'état 61
+    type                  aller à l'état 62
+    type_array            aller à l'état 36
+    block                 aller à l'état 63
+    statement             aller à l'état 95
+    postfix_statement     aller à l'état 67
+    if_statement          aller à l'état 68
+    while_statement       aller à l'état 69
+    do_statement          aller à l'état 70
+    for_statement         aller à l'état 71
+    switch_statement      aller à l'état 72
+    return_statement      aller à l'état 73
+    throw_statement       aller à l'état 74
+    try_catch_statement   aller à l'état 75
+    assignment_statement  aller à l'état 76
+    postfix_expression    aller à l'état 77
+    primary_expression    aller à l'état 78
+
+
+état 45
+
+   97 switch_statement: mc_switch . parenthese_o expression parenthese_f accolade_o case_list_opt default_statement_opt accolade_f
+
+    parenthese_o  décalage et aller à l'état 96
+
+
+état 46
+
+  115 return_statement: mc_return . pt_virgule
+  116                 | mc_return . expression pt_virgule
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    pt_virgule      décalage et aller à l'état 102
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    expression                 aller à l'état 104
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 47
+
+  118 try_catch_statement: mc_try . block catch_list finally_opt
+
+    accolade_o  décalage et aller à l'état 26
+
+    block  aller à l'état 114
+
+
+état 48
+
+  168 primary_expression: mc_new . id parenthese_o argument_list_opt parenthese_f
+  169                   | mc_new . mc_excp parenthese_o argument_list_opt parenthese_f
+  172                   | mc_new . type crochet_o expression crochet_f
+  173                   | mc_new . type crochet_o expression crochet_f crochet_o expression crochet_f
+
+    mc_int      décalage et aller à l'état 13
+    mc_float    décalage et aller à l'état 14
+    mc_double   décalage et aller à l'état 15
+    mc_char     décalage et aller à l'état 16
+    mc_boolean  décalage et aller à l'état 17
+    mc_string   décalage et aller à l'état 18
+    mc_excp     décalage et aller à l'état 115
+    id          décalage et aller à l'état 116
+
+    type  aller à l'état 117
+
+
+état 49
+
+  117 throw_statement: mc_throw . expression pt_virgule
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    expression                 aller à l'état 118
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 50
+
+  167 primary_expression: mc_this .
+
+    $défaut  réduction par utilisation de la règle 167 (primary_expression)
+
+
+état 51
+
+  163 primary_expression: mc_true .
+
+    $défaut  réduction par utilisation de la règle 163 (primary_expression)
+
+
+état 52
+
+  164 primary_expression: mc_false .
+
+    $défaut  réduction par utilisation de la règle 164 (primary_expression)
+
+
+état 53
+
+   79 statement: mc_print . parenthese_o expression_opt parenthese_f pt_virgule
+
+    parenthese_o  décalage et aller à l'état 119
+
+
+état 54
+
+  166 primary_expression: chaine .
+
+    $défaut  réduction par utilisation de la règle 166 (primary_expression)
+
+
+état 55
+
+  165 primary_expression: caractere .
+
+    $défaut  réduction par utilisation de la règle 165 (primary_expression)
+
+
+état 56
+
+   55 type: id .
+  160 primary_expression: id .
+
+    id         réduction par utilisation de la règle 55 (type)
+    crochet_o  réduction par utilisation de la règle 55 (type)
+    $défaut    réduction par utilisation de la règle 160 (primary_expression)
+
+
+état 57
+
+  161 primary_expression: integer .
+
+    $défaut  réduction par utilisation de la règle 161 (primary_expression)
+
+
+état 58
+
+  162 primary_expression: real .
+
+    $défaut  réduction par utilisation de la règle 162 (primary_expression)
+
+
+état 59
+
+   64 block: accolade_o . statement_list_opt accolade_f
+  171 primary_expression: accolade_o . expression_list accolade_f
+
+    mc_int          décalage et aller à l'état 13
+    mc_float        décalage et aller à l'état 14
+    mc_double       décalage et aller à l'état 15
+    mc_char         décalage et aller à l'état 16
+    mc_boolean      décalage et aller à l'état 17
+    mc_string       décalage et aller à l'état 18
+    mc_excp         décalage et aller à l'état 19
+    mc_if           décalage et aller à l'état 41
+    mc_for          décalage et aller à l'état 42
+    mc_while        décalage et aller à l'état 43
+    mc_do           décalage et aller à l'état 44
+    mc_switch       décalage et aller à l'état 45
+    mc_return       décalage et aller à l'état 46
+    mc_try          décalage et aller à l'état 47
+    mc_new          décalage et aller à l'état 48
+    mc_throw        décalage et aller à l'état 49
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    mc_print        décalage et aller à l'état 53
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 56
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 59
+    parenthese_o    décalage et aller à l'état 60
+
+    $défaut  réduction par utilisation de la règle 65 (statement_list_opt)
+
+    var_decl                   aller à l'état 61
+    type                       aller à l'état 62
+    type_array                 aller à l'état 36
+    block                      aller à l'état 63
+    statement_list_opt         aller à l'état 64
+    statement_list             aller à l'état 65
+    statement                  aller à l'état 66
+    postfix_statement          aller à l'état 67
+    if_statement               aller à l'état 68
+    while_statement            aller à l'état 69
+    do_statement               aller à l'état 70
+    for_statement              aller à l'état 71
+    switch_statement           aller à l'état 72
+    return_statement           aller à l'état 73
+    throw_statement            aller à l'état 74
+    try_catch_statement        aller à l'état 75
+    expression                 aller à l'état 120
+    assignment_statement       aller à l'état 76
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 121
+    primary_expression         aller à l'état 78
+    expression_list            aller à l'état 122
+
+
+état 60
+
+  170 primary_expression: parenthese_o . expression_list_opt parenthese_f
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    $défaut  réduction par utilisation de la règle 180 (expression_list_opt)
+
+    expression                 aller à l'état 120
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+    expression_list            aller à l'état 123
+    expression_list_opt        aller à l'état 124
+
+
+état 61
+
+   70 statement: var_decl .
+
+    $défaut  réduction par utilisation de la règle 70 (statement)
+
+
+état 62
+
+   16 var_decl: type . var_decl_list pt_virgule
+   56 type_array: type . crochet_o crochet_f
+   57           | type . crochet_o crochet_f crochet_o crochet_f
+
+    id         décalage et aller à l'état 88
+    crochet_o  décalage et aller à l'état 86
+
+    var_decl_list  aller à l'état 87
+
+
+état 63
+
+   69 statement: block .
+
+    $défaut  réduction par utilisation de la règle 69 (statement)
+
+
+état 64
+
+   64 block: accolade_o statement_list_opt . accolade_f
+
+    accolade_f  décalage et aller à l'état 125
+
+
+état 65
+
+   66 statement_list_opt: statement_list .
+   68 statement_list: statement_list . statement
+
+    mc_int        décalage et aller à l'état 13
+    mc_float      décalage et aller à l'état 14
+    mc_double     décalage et aller à l'état 15
+    mc_char       décalage et aller à l'état 16
+    mc_boolean    décalage et aller à l'état 17
+    mc_string     décalage et aller à l'état 18
+    mc_excp       décalage et aller à l'état 19
+    mc_if         décalage et aller à l'état 41
+    mc_for        décalage et aller à l'état 42
+    mc_while      décalage et aller à l'état 43
+    mc_do         décalage et aller à l'état 44
+    mc_switch     décalage et aller à l'état 45
+    mc_return     décalage et aller à l'état 46
+    mc_try        décalage et aller à l'état 47
+    mc_new        décalage et aller à l'état 48
+    mc_throw      décalage et aller à l'état 49
+    mc_this       décalage et aller à l'état 50
+    mc_true       décalage et aller à l'état 51
+    mc_false      décalage et aller à l'état 52
+    mc_print      décalage et aller à l'état 53
+    chaine        décalage et aller à l'état 54
+    caractere     décalage et aller à l'état 55
+    id            décalage et aller à l'état 56
+    integer       décalage et aller à l'état 57
+    real          décalage et aller à l'état 58
+    accolade_o    décalage et aller à l'état 59
+    parenthese_o  décalage et aller à l'état 60
+
+    $défaut  réduction par utilisation de la règle 66 (statement_list_opt)
+
+    var_decl              aller à l'état 61
+    type                  aller à l'état 62
+    type_array            aller à l'état 36
+    block                 aller à l'état 63
+    statement             aller à l'état 126
+    postfix_statement     aller à l'état 67
+    if_statement          aller à l'état 68
+    while_statement       aller à l'état 69
+    do_statement          aller à l'état 70
+    for_statement         aller à l'état 71
+    switch_statement      aller à l'état 72
+    return_statement      aller à l'état 73
+    throw_statement       aller à l'état 74
+    try_catch_statement   aller à l'état 75
+    assignment_statement  aller à l'état 76
+    postfix_expression    aller à l'état 77
+    primary_expression    aller à l'état 78
+
+
+état 66
+
+   67 statement_list: statement .
+
+    $défaut  réduction par utilisation de la règle 67 (statement_list)
+
+
+état 67
+
+   81 statement: postfix_statement . pt_virgule
+
+    pt_virgule  décalage et aller à l'état 127
+
+
+état 68
+
+   71 statement: if_statement .
+
+    $défaut  réduction par utilisation de la règle 71 (statement)
+
+
+état 69
+
+   72 statement: while_statement .
+
+    $défaut  réduction par utilisation de la règle 72 (statement)
+
+
+état 70
+
+   73 statement: do_statement .
+
+    $défaut  réduction par utilisation de la règle 73 (statement)
+
+
+état 71
+
+   74 statement: for_statement .
+
+    $défaut  réduction par utilisation de la règle 74 (statement)
+
+
+état 72
+
+   75 statement: switch_statement .
+
+    $défaut  réduction par utilisation de la règle 75 (statement)
+
+
+état 73
+
+   76 statement: return_statement .
+
+    $défaut  réduction par utilisation de la règle 76 (statement)
+
+
+état 74
+
+   77 statement: throw_statement .
+
+    $défaut  réduction par utilisation de la règle 77 (statement)
+
+
+état 75
+
+   78 statement: try_catch_statement .
+
+    $défaut  réduction par utilisation de la règle 78 (statement)
+
+
+état 76
+
+   80 statement: assignment_statement . pt_virgule
+
+    pt_virgule  décalage et aller à l'état 128
+
+
+état 77
+
+   83 postfix_statement: postfix_expression . postfix_suffix
+   84                  | postfix_expression . incrementation
+  128 assignment_statement: postfix_expression . affectation assignment_expression
+  129                     | postfix_expression . addition_assignment assignment_expression
+  155 postfix_expression: postfix_expression . postfix_suffix
+  156                   | postfix_expression . incrementation
+
+    affectation          décalage et aller à l'état 129
+    incrementation       décalage et aller à l'état 130
+    addition_assignment  décalage et aller à l'état 131
+    point                décalage et aller à l'état 132
+
+    postfix_suffix  aller à l'état 133
+
+
+état 78
+
+   82 postfix_statement: primary_expression . parenthese_o argument_list_opt parenthese_f
+  154 postfix_expression: primary_expression . call_suffix
+
+    parenthese_o  décalage et aller à l'état 134
+
+    $défaut  réduction par utilisation de la règle 157 (call_suffix)
+
+    call_suffix  aller à l'état 135
+
+
+état 79
+
+    5 class_decl: mc_public_opt mc_class id accolade_o $@1 class_body accolade_f .
+
+    $défaut  réduction par utilisation de la règle 5 (class_decl)
+
+
+état 80
+
+   11 class_body_decl_list: class_body_decl_list class_body_decl .
+
+    $défaut  réduction par utilisation de la règle 11 (class_body_decl_list)
+
+
+état 81
+
+   26 method_decl: visibility_static mc_void . id $@2 parenthese_o param_list_opt parenthese_f throws_clause_opt block
+
+    id  décalage et aller à l'état 136
+
+
+état 82
+
+   34 constructor_decl: visibility_static id . $@6 parenthese_o param_list_opt parenthese_f block
+   55 type: id .
+
+    id       réduction par utilisation de la règle 55 (type)
+    $défaut  réduction par utilisation de la règle 33 ($@6)
+
+    $@6  aller à l'état 137
+
+
+état 83
+
+   28 method_decl: visibility_static type . id $@3 parenthese_o param_list_opt parenthese_f throws_clause_opt block
+
+    id  décalage et aller à l'état 138
+
+
+état 84
+
+   43 visibility_static: visibility_actual mc_static .
+
+    $défaut  réduction par utilisation de la règle 43 (visibility_static)
+
+
+état 85
+
+   18 var_decl_list: id . var_decl_suffix_opt
+   32 method_decl: type id . $@5 parenthese_o param_list_opt parenthese_f throws_clause_opt block
+
+    affectation  décalage et aller à l'état 139
+
+    parenthese_o  réduction par utilisation de la règle 31 ($@5)
+    $défaut       réduction par utilisation de la règle 20 (var_decl_suffix_opt)
+
+    var_decl_suffix_opt  aller à l'état 140
+    $@5                  aller à l'état 141
+
+
+état 86
+
+   56 type_array: type crochet_o . crochet_f
+   57           | type crochet_o . crochet_f crochet_o crochet_f
+
+    crochet_f  décalage et aller à l'état 142
+
+
+état 87
+
+   16 var_decl: type var_decl_list . pt_virgule
+   19 var_decl_list: var_decl_list . virgule id
+
+    pt_virgule  décalage et aller à l'état 143
+    virgule     décalage et aller à l'état 144
+
+
+état 88
+
+   18 var_decl_list: id . var_decl_suffix_opt
+
+    affectation  décalage et aller à l'état 139
+
+    $défaut  réduction par utilisation de la règle 20 (var_decl_suffix_opt)
+
+    var_decl_suffix_opt  aller à l'état 140
+
+
+état 89
+
+   17 var_decl: type_array var_decl_list . pt_virgule
+   19 var_decl_list: var_decl_list . virgule id
+
+    pt_virgule  décalage et aller à l'état 145
+    virgule     décalage et aller à l'état 144
+
+
+état 90
+
+   30 method_decl: mc_void id $@4 . parenthese_o param_list_opt parenthese_f throws_clause_opt block
+
+    parenthese_o  décalage et aller à l'état 146
+
+
+état 91
+
+   36 constructor_decl: id $@7 parenthese_o . param_list_opt parenthese_f block
+
+    mc_int      décalage et aller à l'état 13
+    mc_float    décalage et aller à l'état 14
+    mc_double   décalage et aller à l'état 15
+    mc_char     décalage et aller à l'état 16
+    mc_boolean  décalage et aller à l'état 17
+    mc_string   décalage et aller à l'état 18
+    mc_excp     décalage et aller à l'état 19
+    id          décalage et aller à l'état 147
+
+    $défaut  réduction par utilisation de la règle 58 (param_list_opt)
+
+    type            aller à l'état 148
+    type_array      aller à l'état 149
+    param_list_opt  aller à l'état 150
+    param_list      aller à l'état 151
+    param           aller à l'état 152
+
+
+état 92
+
+   85 if_statement: mc_if parenthese_o . expression parenthese_f statement
+   86             | mc_if parenthese_o . expression parenthese_f statement mc_else statement
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    expression                 aller à l'état 153
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 93
+
+   89 for_statement: mc_for parenthese_o . for_init_opt expression_opt pt_virgule for_update_opt parenthese_f statement
+
+    mc_int          décalage et aller à l'état 13
+    mc_float        décalage et aller à l'état 14
+    mc_double       décalage et aller à l'état 15
+    mc_char         décalage et aller à l'état 16
+    mc_boolean      décalage et aller à l'état 17
+    mc_string       décalage et aller à l'état 18
+    mc_excp         décalage et aller à l'état 19
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 56
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    pt_virgule      décalage et aller à l'état 154
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    var_decl_for               aller à l'état 155
+    type                       aller à l'état 156
+    for_init_opt               aller à l'état 157
+    expression                 aller à l'état 158
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 94
+
+   87 while_statement: mc_while parenthese_o . expression parenthese_f statement
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    expression                 aller à l'état 159
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 95
+
+   88 do_statement: mc_do statement . mc_while parenthese_o expression parenthese_f pt_virgule
+
+    mc_while  décalage et aller à l'état 160
+
+
+état 96
+
+   97 switch_statement: mc_switch parenthese_o . expression parenthese_f accolade_o case_list_opt default_statement_opt accolade_f
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    expression                 aller à l'état 161
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 97
+
+  160 primary_expression: id .
+
+    $défaut  réduction par utilisation de la règle 160 (primary_expression)
+
+
+état 98
+
+  152 unary_expression: addition . unary_expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    unary_expression    aller à l'état 162
+    postfix_expression  aller à l'état 112
+    primary_expression  aller à l'état 113
+
+
+état 99
+
+  151 unary_expression: soustraction . unary_expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    unary_expression    aller à l'état 163
+    postfix_expression  aller à l'état 112
+    primary_expression  aller à l'état 113
+
+
+état 100
+
+  153 unary_expression: incrementation . unary_expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    unary_expression    aller à l'état 164
+    postfix_expression  aller à l'état 112
+    primary_expression  aller à l'état 113
+
+
+état 101
+
+  150 unary_expression: pt_exclamation . unary_expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    unary_expression    aller à l'état 165
+    postfix_expression  aller à l'état 112
+    primary_expression  aller à l'état 113
+
+
+état 102
+
+  115 return_statement: mc_return pt_virgule .
+
+    $défaut  réduction par utilisation de la règle 115 (return_statement)
+
+
+état 103
+
+  171 primary_expression: accolade_o . expression_list accolade_f
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    expression                 aller à l'état 120
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+    expression_list            aller à l'état 122
+
+
+état 104
+
+  116 return_statement: mc_return expression . pt_virgule
+
+    pt_virgule  décalage et aller à l'état 166
+
+
+état 105
+
+  125 expression: logical_or_expression .
+  131 logical_or_expression: logical_or_expression . ou logical_and_expression
+
+    ou  décalage et aller à l'état 167
+
+    $défaut  réduction par utilisation de la règle 125 (expression)
+
+
+état 106
+
+  130 logical_or_expression: logical_and_expression .
+  133 logical_and_expression: logical_and_expression . et equality_expression
+
+    et  décalage et aller à l'état 168
+
+    $défaut  réduction par utilisation de la règle 130 (logical_or_expression)
+
+
+état 107
+
+  132 logical_and_expression: equality_expression .
+  135 equality_expression: equality_expression . egal relational_expression
+  136                    | equality_expression . different relational_expression
+
+    egal       décalage et aller à l'état 169
+    different  décalage et aller à l'état 170
+
+    $défaut  réduction par utilisation de la règle 132 (logical_and_expression)
+
+
+état 108
+
+  134 equality_expression: relational_expression .
+  138 relational_expression: relational_expression . inf additive_expression
+  139                      | relational_expression . sup additive_expression
+  140                      | relational_expression . inf_egal additive_expression
+  141                      | relational_expression . sup_egal additive_expression
+
+    sup       décalage et aller à l'état 171
+    inf       décalage et aller à l'état 172
+    inf_egal  décalage et aller à l'état 173
+    sup_egal  décalage et aller à l'état 174
+
+    $défaut  réduction par utilisation de la règle 134 (equality_expression)
+
+
+état 109
+
+  137 relational_expression: additive_expression .
+  143 additive_expression: additive_expression . addition multiplicative_expression
+  144                    | additive_expression . soustraction multiplicative_expression
+
+    addition      décalage et aller à l'état 175
+    soustraction  décalage et aller à l'état 176
+
+    $défaut  réduction par utilisation de la règle 137 (relational_expression)
+
+
+état 110
+
+  142 additive_expression: multiplicative_expression .
+  146 multiplicative_expression: multiplicative_expression . multiplication unary_expression
+  147                          | multiplicative_expression . division unary_expression
+  148                          | multiplicative_expression . mod unary_expression
+
+    multiplication  décalage et aller à l'état 177
+    division        décalage et aller à l'état 178
+    mod             décalage et aller à l'état 179
+
+    $défaut  réduction par utilisation de la règle 142 (additive_expression)
+
+
+état 111
+
+  145 multiplicative_expression: unary_expression .
+
+    $défaut  réduction par utilisation de la règle 145 (multiplicative_expression)
+
+
+état 112
+
+  149 unary_expression: postfix_expression .
+  155 postfix_expression: postfix_expression . postfix_suffix
+  156                   | postfix_expression . incrementation
+
+    incrementation  décalage et aller à l'état 180
+    point           décalage et aller à l'état 132
+
+    $défaut  réduction par utilisation de la règle 149 (unary_expression)
+
+    postfix_suffix  aller à l'état 181
+
+
+état 113
+
+  154 postfix_expression: primary_expression . call_suffix
+
+    parenthese_o  décalage et aller à l'état 182
+
+    $défaut  réduction par utilisation de la règle 157 (call_suffix)
+
+    call_suffix  aller à l'état 135
+
+
+état 114
+
+  118 try_catch_statement: mc_try block . catch_list finally_opt
+
+    mc_catch  décalage et aller à l'état 183
+
+    catch_list    aller à l'état 184
+    catch_clause  aller à l'état 185
+
+
+état 115
+
+   54 type: mc_excp .
+  169 primary_expression: mc_new mc_excp . parenthese_o argument_list_opt parenthese_f
+
+    parenthese_o  décalage et aller à l'état 186
+
+    $défaut  réduction par utilisation de la règle 54 (type)
+
+
+état 116
+
+   55 type: id .
+  168 primary_expression: mc_new id . parenthese_o argument_list_opt parenthese_f
+
+    parenthese_o  décalage et aller à l'état 187
+
+    $défaut  réduction par utilisation de la règle 55 (type)
+
+
+état 117
+
+  172 primary_expression: mc_new type . crochet_o expression crochet_f
+  173                   | mc_new type . crochet_o expression crochet_f crochet_o expression crochet_f
+
+    crochet_o  décalage et aller à l'état 188
+
+
+état 118
+
+  117 throw_statement: mc_throw expression . pt_virgule
+
+    pt_virgule  décalage et aller à l'état 189
+
+
+état 119
+
+   79 statement: mc_print parenthese_o . expression_opt parenthese_f pt_virgule
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    $défaut  réduction par utilisation de la règle 93 (expression_opt)
+
+    expression_opt             aller à l'état 190
+    expression                 aller à l'état 191
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 120
+
+  178 expression_list: expression .
+
+    $défaut  réduction par utilisation de la règle 178 (expression_list)
+
+
+état 121
+
+   83 postfix_statement: postfix_expression . postfix_suffix
+   84                  | postfix_expression . incrementation
+  128 assignment_statement: postfix_expression . affectation assignment_expression
+  129                     | postfix_expression . addition_assignment assignment_expression
+  149 unary_expression: postfix_expression .
+  155 postfix_expression: postfix_expression . postfix_suffix
+  156                   | postfix_expression . incrementation
+
+    affectation          décalage et aller à l'état 129
+    incrementation       décalage et aller à l'état 130
+    addition_assignment  décalage et aller à l'état 131
+    point                décalage et aller à l'état 132
+
+    $défaut  réduction par utilisation de la règle 149 (unary_expression)
+
+    postfix_suffix  aller à l'état 133
+
+
+état 122
+
+  171 primary_expression: accolade_o expression_list . accolade_f
+  179 expression_list: expression_list . virgule expression
+
+    virgule     décalage et aller à l'état 192
+    accolade_f  décalage et aller à l'état 193
+
+
+état 123
+
+  179 expression_list: expression_list . virgule expression
+  181 expression_list_opt: expression_list .
+
+    virgule  décalage et aller à l'état 192
+
+    $défaut  réduction par utilisation de la règle 181 (expression_list_opt)
+
+
+état 124
+
+  170 primary_expression: parenthese_o expression_list_opt . parenthese_f
+
+    parenthese_f  décalage et aller à l'état 194
+
+
+état 125
+
+   64 block: accolade_o statement_list_opt accolade_f .
+
+    $défaut  réduction par utilisation de la règle 64 (block)
+
+
+état 126
+
+   68 statement_list: statement_list statement .
+
+    $défaut  réduction par utilisation de la règle 68 (statement_list)
+
+
+état 127
+
+   81 statement: postfix_statement pt_virgule .
+
+    $défaut  réduction par utilisation de la règle 81 (statement)
+
+
+état 128
+
+   80 statement: assignment_statement pt_virgule .
+
+    $défaut  réduction par utilisation de la règle 80 (statement)
+
+
+état 129
+
+  128 assignment_statement: postfix_expression affectation . assignment_expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    assignment_expression      aller à l'état 195
+    assignment_statement       aller à l'état 196
+    logical_or_expression      aller à l'état 197
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 198
+    primary_expression         aller à l'état 113
+
+
+état 130
+
+   84 postfix_statement: postfix_expression incrementation .
+  156 postfix_expression: postfix_expression incrementation .
+
+    pt_virgule  réduction par utilisation de la règle 84 (postfix_statement)
+    $défaut     réduction par utilisation de la règle 156 (postfix_expression)
+
+
+état 131
+
+  129 assignment_statement: postfix_expression addition_assignment . assignment_expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    assignment_expression      aller à l'état 199
+    assignment_statement       aller à l'état 196
+    logical_or_expression      aller à l'état 197
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 198
+    primary_expression         aller à l'état 113
+
+
+état 132
+
+  159 postfix_suffix: point . id call_suffix
+
+    id  décalage et aller à l'état 200
+
+
+état 133
+
+   83 postfix_statement: postfix_expression postfix_suffix .
+  155 postfix_expression: postfix_expression postfix_suffix .
+
+    pt_virgule  réduction par utilisation de la règle 83 (postfix_statement)
+    $défaut     réduction par utilisation de la règle 155 (postfix_expression)
+
+
+état 134
+
+   82 postfix_statement: primary_expression parenthese_o . argument_list_opt parenthese_f
+  158 call_suffix: parenthese_o . argument_list_opt parenthese_f
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    $défaut  réduction par utilisation de la règle 174 (argument_list_opt)
+
+    expression                 aller à l'état 201
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+    argument_list_opt          aller à l'état 202
+    argument_list              aller à l'état 203
+
+
+état 135
+
+  154 postfix_expression: primary_expression call_suffix .
+
+    $défaut  réduction par utilisation de la règle 154 (postfix_expression)
+
+
+état 136
+
+   26 method_decl: visibility_static mc_void id . $@2 parenthese_o param_list_opt parenthese_f throws_clause_opt block
+
+    $défaut  réduction par utilisation de la règle 25 ($@2)
+
+    $@2  aller à l'état 204
+
+
+état 137
+
+   34 constructor_decl: visibility_static id $@6 . parenthese_o param_list_opt parenthese_f block
+
+    parenthese_o  décalage et aller à l'état 205
+
+
+état 138
+
+   28 method_decl: visibility_static type id . $@3 parenthese_o param_list_opt parenthese_f throws_clause_opt block
+
+    $défaut  réduction par utilisation de la règle 27 ($@3)
+
+    $@3  aller à l'état 206
+
+
+état 139
+
+   21 var_decl_suffix_opt: affectation . expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    expression                 aller à l'état 207
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 140
+
+   18 var_decl_list: id var_decl_suffix_opt .
+
+    $défaut  réduction par utilisation de la règle 18 (var_decl_list)
+
+
+état 141
+
+   32 method_decl: type id $@5 . parenthese_o param_list_opt parenthese_f throws_clause_opt block
+
+    parenthese_o  décalage et aller à l'état 208
+
+
+état 142
+
+   56 type_array: type crochet_o crochet_f .
+   57           | type crochet_o crochet_f . crochet_o crochet_f
+
+    crochet_o  décalage et aller à l'état 209
+
+    $défaut  réduction par utilisation de la règle 56 (type_array)
+
+
+état 143
+
+   16 var_decl: type var_decl_list pt_virgule .
+
+    $défaut  réduction par utilisation de la règle 16 (var_decl)
+
+
+état 144
+
+   19 var_decl_list: var_decl_list virgule . id
+
+    id  décalage et aller à l'état 210
+
+
+état 145
+
+   17 var_decl: type_array var_decl_list pt_virgule .
+
+    $défaut  réduction par utilisation de la règle 17 (var_decl)
+
+
+état 146
+
+   30 method_decl: mc_void id $@4 parenthese_o . param_list_opt parenthese_f throws_clause_opt block
+
+    mc_int      décalage et aller à l'état 13
+    mc_float    décalage et aller à l'état 14
+    mc_double   décalage et aller à l'état 15
+    mc_char     décalage et aller à l'état 16
+    mc_boolean  décalage et aller à l'état 17
+    mc_string   décalage et aller à l'état 18
+    mc_excp     décalage et aller à l'état 19
+    id          décalage et aller à l'état 147
+
+    $défaut  réduction par utilisation de la règle 58 (param_list_opt)
+
+    type            aller à l'état 148
+    type_array      aller à l'état 149
+    param_list_opt  aller à l'état 211
+    param_list      aller à l'état 151
+    param           aller à l'état 152
+
+
+état 147
+
+   55 type: id .
+
+    $défaut  réduction par utilisation de la règle 55 (type)
+
+
+état 148
+
+   56 type_array: type . crochet_o crochet_f
+   57           | type . crochet_o crochet_f crochet_o crochet_f
+   62 param: type . id
+
+    id         décalage et aller à l'état 212
+    crochet_o  décalage et aller à l'état 86
+
+
+état 149
+
+   63 param: type_array . id
+
+    id  décalage et aller à l'état 213
+
+
+état 150
+
+   36 constructor_decl: id $@7 parenthese_o param_list_opt . parenthese_f block
+
+    parenthese_f  décalage et aller à l'état 214
+
+
+état 151
+
+   59 param_list_opt: param_list .
+   61 param_list: param_list . virgule param
+
+    virgule  décalage et aller à l'état 215
+
+    $défaut  réduction par utilisation de la règle 59 (param_list_opt)
+
+
+état 152
+
+   60 param_list: param .
+
+    $défaut  réduction par utilisation de la règle 60 (param_list)
+
+
+état 153
+
+   85 if_statement: mc_if parenthese_o expression . parenthese_f statement
+   86             | mc_if parenthese_o expression . parenthese_f statement mc_else statement
+
+    parenthese_f  décalage et aller à l'état 216
+
+
+état 154
+
+   90 for_init_opt: pt_virgule .
+
+    $défaut  réduction par utilisation de la règle 90 (for_init_opt)
+
+
+état 155
+
+   92 for_init_opt: var_decl_for . pt_virgule
+
+    pt_virgule  décalage et aller à l'état 217
+
+
+état 156
+
+   22 var_decl_for: type . id for_var_decl_suffix
+
+    id  décalage et aller à l'état 218
+
+
+état 157
+
+   89 for_statement: mc_for parenthese_o for_init_opt . expression_opt pt_virgule for_update_opt parenthese_f statement
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    $défaut  réduction par utilisation de la règle 93 (expression_opt)
+
+    expression_opt             aller à l'état 219
+    expression                 aller à l'état 191
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 158
+
+   91 for_init_opt: expression . pt_virgule
+
+    pt_virgule  décalage et aller à l'état 220
+
+
+état 159
+
+   87 while_statement: mc_while parenthese_o expression . parenthese_f statement
+
+    parenthese_f  décalage et aller à l'état 221
+
+
+état 160
+
+   88 do_statement: mc_do statement mc_while . parenthese_o expression parenthese_f pt_virgule
+
+    parenthese_o  décalage et aller à l'état 222
+
+
+état 161
+
+   97 switch_statement: mc_switch parenthese_o expression . parenthese_f accolade_o case_list_opt default_statement_opt accolade_f
+
+    parenthese_f  décalage et aller à l'état 223
+
+
+état 162
+
+  152 unary_expression: addition unary_expression .
+
+    $défaut  réduction par utilisation de la règle 152 (unary_expression)
+
+
+état 163
+
+  151 unary_expression: soustraction unary_expression .
+
+    $défaut  réduction par utilisation de la règle 151 (unary_expression)
+
+
+état 164
+
+  153 unary_expression: incrementation unary_expression .
+
+    $défaut  réduction par utilisation de la règle 153 (unary_expression)
+
+
+état 165
+
+  150 unary_expression: pt_exclamation unary_expression .
+
+    $défaut  réduction par utilisation de la règle 150 (unary_expression)
+
+
+état 166
+
+  116 return_statement: mc_return expression pt_virgule .
+
+    $défaut  réduction par utilisation de la règle 116 (return_statement)
+
+
+état 167
+
+  131 logical_or_expression: logical_or_expression ou . logical_and_expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    logical_and_expression     aller à l'état 224
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 168
+
+  133 logical_and_expression: logical_and_expression et . equality_expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    equality_expression        aller à l'état 225
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 169
+
+  135 equality_expression: equality_expression egal . relational_expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    relational_expression      aller à l'état 226
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 170
+
+  136 equality_expression: equality_expression different . relational_expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    relational_expression      aller à l'état 227
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 171
+
+  139 relational_expression: relational_expression sup . additive_expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    additive_expression        aller à l'état 228
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 172
+
+  138 relational_expression: relational_expression inf . additive_expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    additive_expression        aller à l'état 229
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 173
+
+  140 relational_expression: relational_expression inf_egal . additive_expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    additive_expression        aller à l'état 230
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 174
+
+  141 relational_expression: relational_expression sup_egal . additive_expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    additive_expression        aller à l'état 231
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 175
+
+  143 additive_expression: additive_expression addition . multiplicative_expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    multiplicative_expression  aller à l'état 232
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 176
+
+  144 additive_expression: additive_expression soustraction . multiplicative_expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    multiplicative_expression  aller à l'état 233
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 177
+
+  146 multiplicative_expression: multiplicative_expression multiplication . unary_expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    unary_expression    aller à l'état 234
+    postfix_expression  aller à l'état 112
+    primary_expression  aller à l'état 113
+
+
+état 178
+
+  147 multiplicative_expression: multiplicative_expression division . unary_expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    unary_expression    aller à l'état 235
+    postfix_expression  aller à l'état 112
+    primary_expression  aller à l'état 113
+
+
+état 179
+
+  148 multiplicative_expression: multiplicative_expression mod . unary_expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    unary_expression    aller à l'état 236
+    postfix_expression  aller à l'état 112
+    primary_expression  aller à l'état 113
+
+
+état 180
+
+  156 postfix_expression: postfix_expression incrementation .
+
+    $défaut  réduction par utilisation de la règle 156 (postfix_expression)
+
+
+état 181
+
+  155 postfix_expression: postfix_expression postfix_suffix .
+
+    $défaut  réduction par utilisation de la règle 155 (postfix_expression)
+
+
+état 182
+
+  158 call_suffix: parenthese_o . argument_list_opt parenthese_f
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    $défaut  réduction par utilisation de la règle 174 (argument_list_opt)
+
+    expression                 aller à l'état 201
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+    argument_list_opt          aller à l'état 237
+    argument_list              aller à l'état 203
+
+
+état 183
+
+  122 catch_clause: mc_catch . parenthese_o type id parenthese_f $@8 block
+
+    parenthese_o  décalage et aller à l'état 238
+
+
+état 184
+
+  118 try_catch_statement: mc_try block catch_list . finally_opt
+  120 catch_list: catch_list . catch_clause
+
+    mc_catch    décalage et aller à l'état 183
+    mc_finally  décalage et aller à l'état 239
+
+    $défaut  réduction par utilisation de la règle 123 (finally_opt)
+
+    catch_clause  aller à l'état 240
+    finally_opt   aller à l'état 241
+
+
+état 185
+
+  119 catch_list: catch_clause .
+
+    $défaut  réduction par utilisation de la règle 119 (catch_list)
+
+
+état 186
+
+  169 primary_expression: mc_new mc_excp parenthese_o . argument_list_opt parenthese_f
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    $défaut  réduction par utilisation de la règle 174 (argument_list_opt)
+
+    expression                 aller à l'état 201
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+    argument_list_opt          aller à l'état 242
+    argument_list              aller à l'état 203
+
+
+état 187
+
+  168 primary_expression: mc_new id parenthese_o . argument_list_opt parenthese_f
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    $défaut  réduction par utilisation de la règle 174 (argument_list_opt)
+
+    expression                 aller à l'état 201
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+    argument_list_opt          aller à l'état 243
+    argument_list              aller à l'état 203
+
+
+état 188
+
+  172 primary_expression: mc_new type crochet_o . expression crochet_f
+  173                   | mc_new type crochet_o . expression crochet_f crochet_o expression crochet_f
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    expression                 aller à l'état 244
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 189
+
+  117 throw_statement: mc_throw expression pt_virgule .
+
+    $défaut  réduction par utilisation de la règle 117 (throw_statement)
+
+
+état 190
+
+   79 statement: mc_print parenthese_o expression_opt . parenthese_f pt_virgule
+
+    parenthese_f  décalage et aller à l'état 245
+
+
+état 191
+
+   94 expression_opt: expression .
+
+    $défaut  réduction par utilisation de la règle 94 (expression_opt)
+
+
+état 192
+
+  179 expression_list: expression_list virgule . expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    expression                 aller à l'état 246
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 193
+
+  171 primary_expression: accolade_o expression_list accolade_f .
+
+    $défaut  réduction par utilisation de la règle 171 (primary_expression)
+
+
+état 194
+
+  170 primary_expression: parenthese_o expression_list_opt parenthese_f .
+
+    $défaut  réduction par utilisation de la règle 170 (primary_expression)
+
+
+état 195
+
+  128 assignment_statement: postfix_expression affectation assignment_expression .
+
+    $défaut  réduction par utilisation de la règle 128 (assignment_statement)
+
+
+état 196
+
+  127 assignment_expression: assignment_statement .
+
+    $défaut  réduction par utilisation de la règle 127 (assignment_expression)
+
+
+état 197
+
+  126 assignment_expression: logical_or_expression .
+  131 logical_or_expression: logical_or_expression . ou logical_and_expression
+
+    ou  décalage et aller à l'état 167
+
+    $défaut  réduction par utilisation de la règle 126 (assignment_expression)
+
+
+état 198
+
+  128 assignment_statement: postfix_expression . affectation assignment_expression
+  129                     | postfix_expression . addition_assignment assignment_expression
+  149 unary_expression: postfix_expression .
+  155 postfix_expression: postfix_expression . postfix_suffix
+  156                   | postfix_expression . incrementation
+
+    affectation          décalage et aller à l'état 129
+    incrementation       décalage et aller à l'état 180
+    addition_assignment  décalage et aller à l'état 131
+    point                décalage et aller à l'état 132
+
+    $défaut  réduction par utilisation de la règle 149 (unary_expression)
+
+    postfix_suffix  aller à l'état 181
+
+
+état 199
+
+  129 assignment_statement: postfix_expression addition_assignment assignment_expression .
+
+    $défaut  réduction par utilisation de la règle 129 (assignment_statement)
+
+
+état 200
+
+  159 postfix_suffix: point id . call_suffix
+
+    parenthese_o  décalage et aller à l'état 182
+
+    $défaut  réduction par utilisation de la règle 157 (call_suffix)
+
+    call_suffix  aller à l'état 247
+
+
+état 201
+
+  176 argument_list: expression .
+
+    $défaut  réduction par utilisation de la règle 176 (argument_list)
+
+
+état 202
+
+   82 postfix_statement: primary_expression parenthese_o argument_list_opt . parenthese_f
+  158 call_suffix: parenthese_o argument_list_opt . parenthese_f
+
+    parenthese_f  décalage et aller à l'état 248
+
+
+état 203
+
+  175 argument_list_opt: argument_list .
+  177 argument_list: argument_list . virgule expression
+
+    virgule  décalage et aller à l'état 249
+
+    $défaut  réduction par utilisation de la règle 175 (argument_list_opt)
+
+
+état 204
+
+   26 method_decl: visibility_static mc_void id $@2 . parenthese_o param_list_opt parenthese_f throws_clause_opt block
+
+    parenthese_o  décalage et aller à l'état 250
+
+
+état 205
+
+   34 constructor_decl: visibility_static id $@6 parenthese_o . param_list_opt parenthese_f block
+
+    mc_int      décalage et aller à l'état 13
+    mc_float    décalage et aller à l'état 14
+    mc_double   décalage et aller à l'état 15
+    mc_char     décalage et aller à l'état 16
+    mc_boolean  décalage et aller à l'état 17
+    mc_string   décalage et aller à l'état 18
+    mc_excp     décalage et aller à l'état 19
+    id          décalage et aller à l'état 147
+
+    $défaut  réduction par utilisation de la règle 58 (param_list_opt)
+
+    type            aller à l'état 148
+    type_array      aller à l'état 149
+    param_list_opt  aller à l'état 251
+    param_list      aller à l'état 151
+    param           aller à l'état 152
+
+
+état 206
+
+   28 method_decl: visibility_static type id $@3 . parenthese_o param_list_opt parenthese_f throws_clause_opt block
+
+    parenthese_o  décalage et aller à l'état 252
+
+
+état 207
+
+   21 var_decl_suffix_opt: affectation expression .
+
+    $défaut  réduction par utilisation de la règle 21 (var_decl_suffix_opt)
+
+
+état 208
+
+   32 method_decl: type id $@5 parenthese_o . param_list_opt parenthese_f throws_clause_opt block
+
+    mc_int      décalage et aller à l'état 13
+    mc_float    décalage et aller à l'état 14
+    mc_double   décalage et aller à l'état 15
+    mc_char     décalage et aller à l'état 16
+    mc_boolean  décalage et aller à l'état 17
+    mc_string   décalage et aller à l'état 18
+    mc_excp     décalage et aller à l'état 19
+    id          décalage et aller à l'état 147
+
+    $défaut  réduction par utilisation de la règle 58 (param_list_opt)
+
+    type            aller à l'état 148
+    type_array      aller à l'état 149
+    param_list_opt  aller à l'état 253
+    param_list      aller à l'état 151
+    param           aller à l'état 152
+
+
+état 209
+
+   57 type_array: type crochet_o crochet_f crochet_o . crochet_f
+
+    crochet_f  décalage et aller à l'état 254
+
+
+état 210
+
+   19 var_decl_list: var_decl_list virgule id .
+
+    $défaut  réduction par utilisation de la règle 19 (var_decl_list)
+
+
+état 211
+
+   30 method_decl: mc_void id $@4 parenthese_o param_list_opt . parenthese_f throws_clause_opt block
+
+    parenthese_f  décalage et aller à l'état 255
+
+
+état 212
+
+   62 param: type id .
+
+    $défaut  réduction par utilisation de la règle 62 (param)
+
+
+état 213
+
+   63 param: type_array id .
+
+    $défaut  réduction par utilisation de la règle 63 (param)
+
+
+état 214
+
+   36 constructor_decl: id $@7 parenthese_o param_list_opt parenthese_f . block
+
+    accolade_o  décalage et aller à l'état 26
+
+    block  aller à l'état 256
+
+
+état 215
+
+   61 param_list: param_list virgule . param
+
+    mc_int      décalage et aller à l'état 13
+    mc_float    décalage et aller à l'état 14
+    mc_double   décalage et aller à l'état 15
+    mc_char     décalage et aller à l'état 16
+    mc_boolean  décalage et aller à l'état 17
+    mc_string   décalage et aller à l'état 18
+    mc_excp     décalage et aller à l'état 19
+    id          décalage et aller à l'état 147
+
+    type        aller à l'état 148
+    type_array  aller à l'état 149
+    param       aller à l'état 257
+
+
+état 216
+
+   85 if_statement: mc_if parenthese_o expression parenthese_f . statement
+   86             | mc_if parenthese_o expression parenthese_f . statement mc_else statement
+
+    mc_int        décalage et aller à l'état 13
+    mc_float      décalage et aller à l'état 14
+    mc_double     décalage et aller à l'état 15
+    mc_char       décalage et aller à l'état 16
+    mc_boolean    décalage et aller à l'état 17
+    mc_string     décalage et aller à l'état 18
+    mc_excp       décalage et aller à l'état 19
+    mc_if         décalage et aller à l'état 41
+    mc_for        décalage et aller à l'état 42
+    mc_while      décalage et aller à l'état 43
+    mc_do         décalage et aller à l'état 44
+    mc_switch     décalage et aller à l'état 45
+    mc_return     décalage et aller à l'état 46
+    mc_try        décalage et aller à l'état 47
+    mc_new        décalage et aller à l'état 48
+    mc_throw      décalage et aller à l'état 49
+    mc_this       décalage et aller à l'état 50
+    mc_true       décalage et aller à l'état 51
+    mc_false      décalage et aller à l'état 52
+    mc_print      décalage et aller à l'état 53
+    chaine        décalage et aller à l'état 54
+    caractere     décalage et aller à l'état 55
+    id            décalage et aller à l'état 56
+    integer       décalage et aller à l'état 57
+    real          décalage et aller à l'état 58
+    accolade_o    décalage et aller à l'état 59
+    parenthese_o  décalage et aller à l'état 60
+
+    var_decl              aller à l'état 61
+    type                  aller à l'état 62
+    type_array            aller à l'état 36
+    block                 aller à l'état 63
+    statement             aller à l'état 258
+    postfix_statement     aller à l'état 67
+    if_statement          aller à l'état 68
+    while_statement       aller à l'état 69
+    do_statement          aller à l'état 70
+    for_statement         aller à l'état 71
+    switch_statement      aller à l'état 72
+    return_statement      aller à l'état 73
+    throw_statement       aller à l'état 74
+    try_catch_statement   aller à l'état 75
+    assignment_statement  aller à l'état 76
+    postfix_expression    aller à l'état 77
+    primary_expression    aller à l'état 78
+
+
+état 217
+
+   92 for_init_opt: var_decl_for pt_virgule .
+
+    $défaut  réduction par utilisation de la règle 92 (for_init_opt)
+
+
+état 218
+
+   22 var_decl_for: type id . for_var_decl_suffix
+
+    affectation  décalage et aller à l'état 259
+
+    $défaut  réduction par utilisation de la règle 24 (for_var_decl_suffix)
+
+    for_var_decl_suffix  aller à l'état 260
+
+
+état 219
+
+   89 for_statement: mc_for parenthese_o for_init_opt expression_opt . pt_virgule for_update_opt parenthese_f statement
+
+    pt_virgule  décalage et aller à l'état 261
+
+
+état 220
+
+   91 for_init_opt: expression pt_virgule .
+
+    $défaut  réduction par utilisation de la règle 91 (for_init_opt)
+
+
+état 221
+
+   87 while_statement: mc_while parenthese_o expression parenthese_f . statement
+
+    mc_int        décalage et aller à l'état 13
+    mc_float      décalage et aller à l'état 14
+    mc_double     décalage et aller à l'état 15
+    mc_char       décalage et aller à l'état 16
+    mc_boolean    décalage et aller à l'état 17
+    mc_string     décalage et aller à l'état 18
+    mc_excp       décalage et aller à l'état 19
+    mc_if         décalage et aller à l'état 41
+    mc_for        décalage et aller à l'état 42
+    mc_while      décalage et aller à l'état 43
+    mc_do         décalage et aller à l'état 44
+    mc_switch     décalage et aller à l'état 45
+    mc_return     décalage et aller à l'état 46
+    mc_try        décalage et aller à l'état 47
+    mc_new        décalage et aller à l'état 48
+    mc_throw      décalage et aller à l'état 49
+    mc_this       décalage et aller à l'état 50
+    mc_true       décalage et aller à l'état 51
+    mc_false      décalage et aller à l'état 52
+    mc_print      décalage et aller à l'état 53
+    chaine        décalage et aller à l'état 54
+    caractere     décalage et aller à l'état 55
+    id            décalage et aller à l'état 56
+    integer       décalage et aller à l'état 57
+    real          décalage et aller à l'état 58
+    accolade_o    décalage et aller à l'état 59
+    parenthese_o  décalage et aller à l'état 60
+
+    var_decl              aller à l'état 61
+    type                  aller à l'état 62
+    type_array            aller à l'état 36
+    block                 aller à l'état 63
+    statement             aller à l'état 262
+    postfix_statement     aller à l'état 67
+    if_statement          aller à l'état 68
+    while_statement       aller à l'état 69
+    do_statement          aller à l'état 70
+    for_statement         aller à l'état 71
+    switch_statement      aller à l'état 72
+    return_statement      aller à l'état 73
+    throw_statement       aller à l'état 74
+    try_catch_statement   aller à l'état 75
+    assignment_statement  aller à l'état 76
+    postfix_expression    aller à l'état 77
+    primary_expression    aller à l'état 78
+
+
+état 222
+
+   88 do_statement: mc_do statement mc_while parenthese_o . expression parenthese_f pt_virgule
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    expression                 aller à l'état 263
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 223
+
+   97 switch_statement: mc_switch parenthese_o expression parenthese_f . accolade_o case_list_opt default_statement_opt accolade_f
+
+    accolade_o  décalage et aller à l'état 264
+
+
+état 224
+
+  131 logical_or_expression: logical_or_expression ou logical_and_expression .
+  133 logical_and_expression: logical_and_expression . et equality_expression
+
+    et  décalage et aller à l'état 168
+
+    $défaut  réduction par utilisation de la règle 131 (logical_or_expression)
+
+
+état 225
+
+  133 logical_and_expression: logical_and_expression et equality_expression .
+  135 equality_expression: equality_expression . egal relational_expression
+  136                    | equality_expression . different relational_expression
+
+    egal       décalage et aller à l'état 169
+    different  décalage et aller à l'état 170
+
+    $défaut  réduction par utilisation de la règle 133 (logical_and_expression)
+
+
+état 226
+
+  135 equality_expression: equality_expression egal relational_expression .
+  138 relational_expression: relational_expression . inf additive_expression
+  139                      | relational_expression . sup additive_expression
+  140                      | relational_expression . inf_egal additive_expression
+  141                      | relational_expression . sup_egal additive_expression
+
+    sup       décalage et aller à l'état 171
+    inf       décalage et aller à l'état 172
+    inf_egal  décalage et aller à l'état 173
+    sup_egal  décalage et aller à l'état 174
+
+    $défaut  réduction par utilisation de la règle 135 (equality_expression)
+
+
+état 227
+
+  136 equality_expression: equality_expression different relational_expression .
+  138 relational_expression: relational_expression . inf additive_expression
+  139                      | relational_expression . sup additive_expression
+  140                      | relational_expression . inf_egal additive_expression
+  141                      | relational_expression . sup_egal additive_expression
+
+    sup       décalage et aller à l'état 171
+    inf       décalage et aller à l'état 172
+    inf_egal  décalage et aller à l'état 173
+    sup_egal  décalage et aller à l'état 174
+
+    $défaut  réduction par utilisation de la règle 136 (equality_expression)
+
+
+état 228
+
+  139 relational_expression: relational_expression sup additive_expression .
+  143 additive_expression: additive_expression . addition multiplicative_expression
+  144                    | additive_expression . soustraction multiplicative_expression
+
+    addition      décalage et aller à l'état 175
+    soustraction  décalage et aller à l'état 176
+
+    $défaut  réduction par utilisation de la règle 139 (relational_expression)
+
+
+état 229
+
+  138 relational_expression: relational_expression inf additive_expression .
+  143 additive_expression: additive_expression . addition multiplicative_expression
+  144                    | additive_expression . soustraction multiplicative_expression
+
+    addition      décalage et aller à l'état 175
+    soustraction  décalage et aller à l'état 176
+
+    $défaut  réduction par utilisation de la règle 138 (relational_expression)
+
+
+état 230
+
+  140 relational_expression: relational_expression inf_egal additive_expression .
+  143 additive_expression: additive_expression . addition multiplicative_expression
+  144                    | additive_expression . soustraction multiplicative_expression
+
+    addition      décalage et aller à l'état 175
+    soustraction  décalage et aller à l'état 176
+
+    $défaut  réduction par utilisation de la règle 140 (relational_expression)
+
+
+état 231
+
+  141 relational_expression: relational_expression sup_egal additive_expression .
+  143 additive_expression: additive_expression . addition multiplicative_expression
+  144                    | additive_expression . soustraction multiplicative_expression
+
+    addition      décalage et aller à l'état 175
+    soustraction  décalage et aller à l'état 176
+
+    $défaut  réduction par utilisation de la règle 141 (relational_expression)
+
+
+état 232
+
+  143 additive_expression: additive_expression addition multiplicative_expression .
+  146 multiplicative_expression: multiplicative_expression . multiplication unary_expression
+  147                          | multiplicative_expression . division unary_expression
+  148                          | multiplicative_expression . mod unary_expression
+
+    multiplication  décalage et aller à l'état 177
+    division        décalage et aller à l'état 178
+    mod             décalage et aller à l'état 179
+
+    $défaut  réduction par utilisation de la règle 143 (additive_expression)
+
+
+état 233
+
+  144 additive_expression: additive_expression soustraction multiplicative_expression .
+  146 multiplicative_expression: multiplicative_expression . multiplication unary_expression
+  147                          | multiplicative_expression . division unary_expression
+  148                          | multiplicative_expression . mod unary_expression
+
+    multiplication  décalage et aller à l'état 177
+    division        décalage et aller à l'état 178
+    mod             décalage et aller à l'état 179
+
+    $défaut  réduction par utilisation de la règle 144 (additive_expression)
+
+
+état 234
+
+  146 multiplicative_expression: multiplicative_expression multiplication unary_expression .
+
+    $défaut  réduction par utilisation de la règle 146 (multiplicative_expression)
+
+
+état 235
+
+  147 multiplicative_expression: multiplicative_expression division unary_expression .
+
+    $défaut  réduction par utilisation de la règle 147 (multiplicative_expression)
+
+
+état 236
+
+  148 multiplicative_expression: multiplicative_expression mod unary_expression .
+
+    $défaut  réduction par utilisation de la règle 148 (multiplicative_expression)
+
+
+état 237
+
+  158 call_suffix: parenthese_o argument_list_opt . parenthese_f
+
+    parenthese_f  décalage et aller à l'état 265
+
+
+état 238
+
+  122 catch_clause: mc_catch parenthese_o . type id parenthese_f $@8 block
+
+    mc_int      décalage et aller à l'état 13
+    mc_float    décalage et aller à l'état 14
+    mc_double   décalage et aller à l'état 15
+    mc_char     décalage et aller à l'état 16
+    mc_boolean  décalage et aller à l'état 17
+    mc_string   décalage et aller à l'état 18
+    mc_excp     décalage et aller à l'état 19
+    id          décalage et aller à l'état 147
+
+    type  aller à l'état 266
+
+
+état 239
+
+  124 finally_opt: mc_finally . block
+
+    accolade_o  décalage et aller à l'état 26
+
+    block  aller à l'état 267
+
+
+état 240
+
+  120 catch_list: catch_list catch_clause .
+
+    $défaut  réduction par utilisation de la règle 120 (catch_list)
+
+
+état 241
+
+  118 try_catch_statement: mc_try block catch_list finally_opt .
+
+    $défaut  réduction par utilisation de la règle 118 (try_catch_statement)
+
+
+état 242
+
+  169 primary_expression: mc_new mc_excp parenthese_o argument_list_opt . parenthese_f
+
+    parenthese_f  décalage et aller à l'état 268
+
+
+état 243
+
+  168 primary_expression: mc_new id parenthese_o argument_list_opt . parenthese_f
+
+    parenthese_f  décalage et aller à l'état 269
+
+
+état 244
+
+  172 primary_expression: mc_new type crochet_o expression . crochet_f
+  173                   | mc_new type crochet_o expression . crochet_f crochet_o expression crochet_f
+
+    crochet_f  décalage et aller à l'état 270
+
+
+état 245
+
+   79 statement: mc_print parenthese_o expression_opt parenthese_f . pt_virgule
+
+    pt_virgule  décalage et aller à l'état 271
+
+
+état 246
+
+  179 expression_list: expression_list virgule expression .
+
+    $défaut  réduction par utilisation de la règle 179 (expression_list)
+
+
+état 247
+
+  159 postfix_suffix: point id call_suffix .
+
+    $défaut  réduction par utilisation de la règle 159 (postfix_suffix)
+
+
+état 248
+
+   82 postfix_statement: primary_expression parenthese_o argument_list_opt parenthese_f .
+  158 call_suffix: parenthese_o argument_list_opt parenthese_f .
+
+    pt_virgule  réduction par utilisation de la règle 82 (postfix_statement)
+    $défaut     réduction par utilisation de la règle 158 (call_suffix)
+
+
+état 249
+
+  177 argument_list: argument_list virgule . expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    expression                 aller à l'état 272
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 250
+
+   26 method_decl: visibility_static mc_void id $@2 parenthese_o . param_list_opt parenthese_f throws_clause_opt block
+
+    mc_int      décalage et aller à l'état 13
+    mc_float    décalage et aller à l'état 14
+    mc_double   décalage et aller à l'état 15
+    mc_char     décalage et aller à l'état 16
+    mc_boolean  décalage et aller à l'état 17
+    mc_string   décalage et aller à l'état 18
+    mc_excp     décalage et aller à l'état 19
+    id          décalage et aller à l'état 147
+
+    $défaut  réduction par utilisation de la règle 58 (param_list_opt)
+
+    type            aller à l'état 148
+    type_array      aller à l'état 149
+    param_list_opt  aller à l'état 273
+    param_list      aller à l'état 151
+    param           aller à l'état 152
+
+
+état 251
+
+   34 constructor_decl: visibility_static id $@6 parenthese_o param_list_opt . parenthese_f block
+
+    parenthese_f  décalage et aller à l'état 274
+
+
+état 252
+
+   28 method_decl: visibility_static type id $@3 parenthese_o . param_list_opt parenthese_f throws_clause_opt block
+
+    mc_int      décalage et aller à l'état 13
+    mc_float    décalage et aller à l'état 14
+    mc_double   décalage et aller à l'état 15
+    mc_char     décalage et aller à l'état 16
+    mc_boolean  décalage et aller à l'état 17
+    mc_string   décalage et aller à l'état 18
+    mc_excp     décalage et aller à l'état 19
+    id          décalage et aller à l'état 147
+
+    $défaut  réduction par utilisation de la règle 58 (param_list_opt)
+
+    type            aller à l'état 148
+    type_array      aller à l'état 149
+    param_list_opt  aller à l'état 275
+    param_list      aller à l'état 151
+    param           aller à l'état 152
+
+
+état 253
+
+   32 method_decl: type id $@5 parenthese_o param_list_opt . parenthese_f throws_clause_opt block
+
+    parenthese_f  décalage et aller à l'état 276
+
+
+état 254
+
+   57 type_array: type crochet_o crochet_f crochet_o crochet_f .
+
+    $défaut  réduction par utilisation de la règle 57 (type_array)
+
+
+état 255
+
+   30 method_decl: mc_void id $@4 parenthese_o param_list_opt parenthese_f . throws_clause_opt block
+
+    mc_throws  décalage et aller à l'état 277
+
+    $défaut  réduction par utilisation de la règle 37 (throws_clause_opt)
+
+    throws_clause_opt  aller à l'état 278
+
+
+état 256
+
+   36 constructor_decl: id $@7 parenthese_o param_list_opt parenthese_f block .
+
+    $défaut  réduction par utilisation de la règle 36 (constructor_decl)
+
+
+état 257
+
+   61 param_list: param_list virgule param .
+
+    $défaut  réduction par utilisation de la règle 61 (param_list)
+
+
+état 258
+
+   85 if_statement: mc_if parenthese_o expression parenthese_f statement .
+   86             | mc_if parenthese_o expression parenthese_f statement . mc_else statement
+
+    mc_else  décalage et aller à l'état 279
+
+    $défaut  réduction par utilisation de la règle 85 (if_statement)
+
+
+état 259
+
+   23 for_var_decl_suffix: affectation . expression
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    expression                 aller à l'état 280
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 260
+
+   22 var_decl_for: type id for_var_decl_suffix .
+
+    $défaut  réduction par utilisation de la règle 22 (var_decl_for)
+
+
+état 261
+
+   89 for_statement: mc_for parenthese_o for_init_opt expression_opt pt_virgule . for_update_opt parenthese_f statement
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    $défaut  réduction par utilisation de la règle 95 (for_update_opt)
+
+    for_update_opt             aller à l'état 281
+    expression                 aller à l'état 282
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 262
+
+   87 while_statement: mc_while parenthese_o expression parenthese_f statement .
+
+    $défaut  réduction par utilisation de la règle 87 (while_statement)
+
+
+état 263
+
+   88 do_statement: mc_do statement mc_while parenthese_o expression . parenthese_f pt_virgule
+
+    parenthese_f  décalage et aller à l'état 283
+
+
+état 264
+
+   97 switch_statement: mc_switch parenthese_o expression parenthese_f accolade_o . case_list_opt default_statement_opt accolade_f
+
+    mc_case  décalage et aller à l'état 284
+
+    $défaut  réduction par utilisation de la règle 98 (case_list_opt)
+
+    case_list_opt   aller à l'état 285
+    case_list       aller à l'état 286
+    case_statement  aller à l'état 287
+
+
+état 265
+
+  158 call_suffix: parenthese_o argument_list_opt parenthese_f .
+
+    $défaut  réduction par utilisation de la règle 158 (call_suffix)
+
+
+état 266
+
+  122 catch_clause: mc_catch parenthese_o type . id parenthese_f $@8 block
+
+    id  décalage et aller à l'état 288
+
+
+état 267
+
+  124 finally_opt: mc_finally block .
+
+    $défaut  réduction par utilisation de la règle 124 (finally_opt)
+
+
+état 268
+
+  169 primary_expression: mc_new mc_excp parenthese_o argument_list_opt parenthese_f .
+
+    $défaut  réduction par utilisation de la règle 169 (primary_expression)
+
+
+état 269
+
+  168 primary_expression: mc_new id parenthese_o argument_list_opt parenthese_f .
+
+    $défaut  réduction par utilisation de la règle 168 (primary_expression)
+
+
+état 270
+
+  172 primary_expression: mc_new type crochet_o expression crochet_f .
+  173                   | mc_new type crochet_o expression crochet_f . crochet_o expression crochet_f
+
+    crochet_o  décalage et aller à l'état 289
+
+    $défaut  réduction par utilisation de la règle 172 (primary_expression)
+
+
+état 271
+
+   79 statement: mc_print parenthese_o expression_opt parenthese_f pt_virgule .
+
+    $défaut  réduction par utilisation de la règle 79 (statement)
+
+
+état 272
+
+  177 argument_list: argument_list virgule expression .
+
+    $défaut  réduction par utilisation de la règle 177 (argument_list)
+
+
+état 273
+
+   26 method_decl: visibility_static mc_void id $@2 parenthese_o param_list_opt . parenthese_f throws_clause_opt block
+
+    parenthese_f  décalage et aller à l'état 290
+
+
+état 274
+
+   34 constructor_decl: visibility_static id $@6 parenthese_o param_list_opt parenthese_f . block
+
+    accolade_o  décalage et aller à l'état 26
+
+    block  aller à l'état 291
+
+
+état 275
+
+   28 method_decl: visibility_static type id $@3 parenthese_o param_list_opt . parenthese_f throws_clause_opt block
+
+    parenthese_f  décalage et aller à l'état 292
+
+
+état 276
+
+   32 method_decl: type id $@5 parenthese_o param_list_opt parenthese_f . throws_clause_opt block
+
+    mc_throws  décalage et aller à l'état 277
+
+    $défaut  réduction par utilisation de la règle 37 (throws_clause_opt)
+
+    throws_clause_opt  aller à l'état 293
+
+
+état 277
+
+   38 throws_clause_opt: mc_throws . exception_list
+
+    mc_int      décalage et aller à l'état 13
+    mc_float    décalage et aller à l'état 14
+    mc_double   décalage et aller à l'état 15
+    mc_char     décalage et aller à l'état 16
+    mc_boolean  décalage et aller à l'état 17
+    mc_string   décalage et aller à l'état 18
+    mc_excp     décalage et aller à l'état 19
+    id          décalage et aller à l'état 147
+
+    exception_list  aller à l'état 294
+    type            aller à l'état 295
+
+
+état 278
+
+   30 method_decl: mc_void id $@4 parenthese_o param_list_opt parenthese_f throws_clause_opt . block
+
+    accolade_o  décalage et aller à l'état 26
+
+    block  aller à l'état 296
+
+
+état 279
+
+   86 if_statement: mc_if parenthese_o expression parenthese_f statement mc_else . statement
+
+    mc_int        décalage et aller à l'état 13
+    mc_float      décalage et aller à l'état 14
+    mc_double     décalage et aller à l'état 15
+    mc_char       décalage et aller à l'état 16
+    mc_boolean    décalage et aller à l'état 17
+    mc_string     décalage et aller à l'état 18
+    mc_excp       décalage et aller à l'état 19
+    mc_if         décalage et aller à l'état 41
+    mc_for        décalage et aller à l'état 42
+    mc_while      décalage et aller à l'état 43
+    mc_do         décalage et aller à l'état 44
+    mc_switch     décalage et aller à l'état 45
+    mc_return     décalage et aller à l'état 46
+    mc_try        décalage et aller à l'état 47
+    mc_new        décalage et aller à l'état 48
+    mc_throw      décalage et aller à l'état 49
+    mc_this       décalage et aller à l'état 50
+    mc_true       décalage et aller à l'état 51
+    mc_false      décalage et aller à l'état 52
+    mc_print      décalage et aller à l'état 53
+    chaine        décalage et aller à l'état 54
+    caractere     décalage et aller à l'état 55
+    id            décalage et aller à l'état 56
+    integer       décalage et aller à l'état 57
+    real          décalage et aller à l'état 58
+    accolade_o    décalage et aller à l'état 59
+    parenthese_o  décalage et aller à l'état 60
+
+    var_decl              aller à l'état 61
+    type                  aller à l'état 62
+    type_array            aller à l'état 36
+    block                 aller à l'état 63
+    statement             aller à l'état 297
+    postfix_statement     aller à l'état 67
+    if_statement          aller à l'état 68
+    while_statement       aller à l'état 69
+    do_statement          aller à l'état 70
+    for_statement         aller à l'état 71
+    switch_statement      aller à l'état 72
+    return_statement      aller à l'état 73
+    throw_statement       aller à l'état 74
+    try_catch_statement   aller à l'état 75
+    assignment_statement  aller à l'état 76
+    postfix_expression    aller à l'état 77
+    primary_expression    aller à l'état 78
+
+
+état 280
+
+   23 for_var_decl_suffix: affectation expression .
+
+    $défaut  réduction par utilisation de la règle 23 (for_var_decl_suffix)
+
+
+état 281
+
+   89 for_statement: mc_for parenthese_o for_init_opt expression_opt pt_virgule for_update_opt . parenthese_f statement
+
+    parenthese_f  décalage et aller à l'état 298
+
+
+état 282
+
+   96 for_update_opt: expression .
+
+    $défaut  réduction par utilisation de la règle 96 (for_update_opt)
+
+
+état 283
+
+   88 do_statement: mc_do statement mc_while parenthese_o expression parenthese_f . pt_virgule
+
+    pt_virgule  décalage et aller à l'état 299
+
+
+état 284
+
+  102 case_statement: mc_case . constant deux_points statement_list_opt break_opt
+
+    mc_true    décalage et aller à l'état 300
+    mc_false   décalage et aller à l'état 301
+    chaine     décalage et aller à l'état 302
+    caractere  décalage et aller à l'état 303
+    id         décalage et aller à l'état 304
+    integer    décalage et aller à l'état 305
+    real       décalage et aller à l'état 306
+
+    constant  aller à l'état 307
+
+
+état 285
+
+   97 switch_statement: mc_switch parenthese_o expression parenthese_f accolade_o case_list_opt . default_statement_opt accolade_f
+
+    mc_default  décalage et aller à l'état 308
+
+    $défaut  réduction par utilisation de la règle 105 (default_statement_opt)
+
+    default_statement_opt  aller à l'état 309
+    default_statement      aller à l'état 310
+
+
+état 286
+
+   99 case_list_opt: case_list .
+  101 case_list: case_list . case_statement
+
+    mc_case  décalage et aller à l'état 284
+
+    $défaut  réduction par utilisation de la règle 99 (case_list_opt)
+
+    case_statement  aller à l'état 311
+
+
+état 287
+
+  100 case_list: case_statement .
+
+    $défaut  réduction par utilisation de la règle 100 (case_list)
+
+
+état 288
+
+  122 catch_clause: mc_catch parenthese_o type id . parenthese_f $@8 block
+
+    parenthese_f  décalage et aller à l'état 312
+
+
+état 289
+
+  173 primary_expression: mc_new type crochet_o expression crochet_f crochet_o . expression crochet_f
+
+    mc_new          décalage et aller à l'état 48
+    mc_this         décalage et aller à l'état 50
+    mc_true         décalage et aller à l'état 51
+    mc_false        décalage et aller à l'état 52
+    chaine          décalage et aller à l'état 54
+    caractere       décalage et aller à l'état 55
+    id              décalage et aller à l'état 97
+    integer         décalage et aller à l'état 57
+    real            décalage et aller à l'état 58
+    addition        décalage et aller à l'état 98
+    soustraction    décalage et aller à l'état 99
+    incrementation  décalage et aller à l'état 100
+    pt_exclamation  décalage et aller à l'état 101
+    accolade_o      décalage et aller à l'état 103
+    parenthese_o    décalage et aller à l'état 60
+
+    expression                 aller à l'état 313
+    logical_or_expression      aller à l'état 105
+    logical_and_expression     aller à l'état 106
+    equality_expression        aller à l'état 107
+    relational_expression      aller à l'état 108
+    additive_expression        aller à l'état 109
+    multiplicative_expression  aller à l'état 110
+    unary_expression           aller à l'état 111
+    postfix_expression         aller à l'état 112
+    primary_expression         aller à l'état 113
+
+
+état 290
+
+   26 method_decl: visibility_static mc_void id $@2 parenthese_o param_list_opt parenthese_f . throws_clause_opt block
+
+    mc_throws  décalage et aller à l'état 277
+
+    $défaut  réduction par utilisation de la règle 37 (throws_clause_opt)
+
+    throws_clause_opt  aller à l'état 314
+
+
+état 291
+
+   34 constructor_decl: visibility_static id $@6 parenthese_o param_list_opt parenthese_f block .
+
+    $défaut  réduction par utilisation de la règle 34 (constructor_decl)
+
+
+état 292
+
+   28 method_decl: visibility_static type id $@3 parenthese_o param_list_opt parenthese_f . throws_clause_opt block
+
+    mc_throws  décalage et aller à l'état 277
+
+    $défaut  réduction par utilisation de la règle 37 (throws_clause_opt)
+
+    throws_clause_opt  aller à l'état 315
+
+
+état 293
+
+   32 method_decl: type id $@5 parenthese_o param_list_opt parenthese_f throws_clause_opt . block
+
+    accolade_o  décalage et aller à l'état 26
+
+    block  aller à l'état 316
+
+
+état 294
+
+   38 throws_clause_opt: mc_throws exception_list .
+   40 exception_list: exception_list . virgule type
+
+    virgule  décalage et aller à l'état 317
+
+    $défaut  réduction par utilisation de la règle 38 (throws_clause_opt)
+
+
+état 295
+
+   39 exception_list: type .
+
+    $défaut  réduction par utilisation de la règle 39 (exception_list)
+
+
+état 296
+
+   30 method_decl: mc_void id $@4 parenthese_o param_list_opt parenthese_f throws_clause_opt block .
+
+    $défaut  réduction par utilisation de la règle 30 (method_decl)
+
+
+état 297
+
+   86 if_statement: mc_if parenthese_o expression parenthese_f statement mc_else statement .
+
+    $défaut  réduction par utilisation de la règle 86 (if_statement)
+
+
+état 298
+
+   89 for_statement: mc_for parenthese_o for_init_opt expression_opt pt_virgule for_update_opt parenthese_f . statement
+
+    mc_int        décalage et aller à l'état 13
+    mc_float      décalage et aller à l'état 14
+    mc_double     décalage et aller à l'état 15
+    mc_char       décalage et aller à l'état 16
+    mc_boolean    décalage et aller à l'état 17
+    mc_string     décalage et aller à l'état 18
+    mc_excp       décalage et aller à l'état 19
+    mc_if         décalage et aller à l'état 41
+    mc_for        décalage et aller à l'état 42
+    mc_while      décalage et aller à l'état 43
+    mc_do         décalage et aller à l'état 44
+    mc_switch     décalage et aller à l'état 45
+    mc_return     décalage et aller à l'état 46
+    mc_try        décalage et aller à l'état 47
+    mc_new        décalage et aller à l'état 48
+    mc_throw      décalage et aller à l'état 49
+    mc_this       décalage et aller à l'état 50
+    mc_true       décalage et aller à l'état 51
+    mc_false      décalage et aller à l'état 52
+    mc_print      décalage et aller à l'état 53
+    chaine        décalage et aller à l'état 54
+    caractere     décalage et aller à l'état 55
+    id            décalage et aller à l'état 56
+    integer       décalage et aller à l'état 57
+    real          décalage et aller à l'état 58
+    accolade_o    décalage et aller à l'état 59
+    parenthese_o  décalage et aller à l'état 60
+
+    var_decl              aller à l'état 61
+    type                  aller à l'état 62
+    type_array            aller à l'état 36
+    block                 aller à l'état 63
+    statement             aller à l'état 318
+    postfix_statement     aller à l'état 67
+    if_statement          aller à l'état 68
+    while_statement       aller à l'état 69
+    do_statement          aller à l'état 70
+    for_statement         aller à l'état 71
+    switch_statement      aller à l'état 72
+    return_statement      aller à l'état 73
+    throw_statement       aller à l'état 74
+    try_catch_statement   aller à l'état 75
+    assignment_statement  aller à l'état 76
+    postfix_expression    aller à l'état 77
+    primary_expression    aller à l'état 78
+
+
+état 299
+
+   88 do_statement: mc_do statement mc_while parenthese_o expression parenthese_f pt_virgule .
+
+    $défaut  réduction par utilisation de la règle 88 (do_statement)
+
+
+état 300
+
+  110 constant: mc_true .
+
+    $défaut  réduction par utilisation de la règle 110 (constant)
+
+
+état 301
+
+  111 constant: mc_false .
+
+    $défaut  réduction par utilisation de la règle 111 (constant)
+
+
+état 302
+
+  113 constant: chaine .
+
+    $défaut  réduction par utilisation de la règle 113 (constant)
+
+
+état 303
+
+  114 constant: caractere .
+
+    $défaut  réduction par utilisation de la règle 114 (constant)
+
+
+état 304
+
+  112 constant: id .
+
+    $défaut  réduction par utilisation de la règle 112 (constant)
+
+
+état 305
+
+  108 constant: integer .
+
+    $défaut  réduction par utilisation de la règle 108 (constant)
+
+
+état 306
+
+  109 constant: real .
+
+    $défaut  réduction par utilisation de la règle 109 (constant)
+
+
+état 307
+
+  102 case_statement: mc_case constant . deux_points statement_list_opt break_opt
+
+    deux_points  décalage et aller à l'état 319
+
+
+état 308
+
+  107 default_statement: mc_default . deux_points statement_list_opt
+
+    deux_points  décalage et aller à l'état 320
+
+
+état 309
+
+   97 switch_statement: mc_switch parenthese_o expression parenthese_f accolade_o case_list_opt default_statement_opt . accolade_f
+
+    accolade_f  décalage et aller à l'état 321
+
+
+état 310
+
+  106 default_statement_opt: default_statement .
+
+    $défaut  réduction par utilisation de la règle 106 (default_statement_opt)
+
+
+état 311
+
+  101 case_list: case_list case_statement .
+
+    $défaut  réduction par utilisation de la règle 101 (case_list)
+
+
+état 312
+
+  122 catch_clause: mc_catch parenthese_o type id parenthese_f . $@8 block
+
+    $défaut  réduction par utilisation de la règle 121 ($@8)
+
+    $@8  aller à l'état 322
+
+
+état 313
+
+  173 primary_expression: mc_new type crochet_o expression crochet_f crochet_o expression . crochet_f
+
+    crochet_f  décalage et aller à l'état 323
+
+
+état 314
+
+   26 method_decl: visibility_static mc_void id $@2 parenthese_o param_list_opt parenthese_f throws_clause_opt . block
+
+    accolade_o  décalage et aller à l'état 26
+
+    block  aller à l'état 324
+
+
+état 315
+
+   28 method_decl: visibility_static type id $@3 parenthese_o param_list_opt parenthese_f throws_clause_opt . block
+
+    accolade_o  décalage et aller à l'état 26
+
+    block  aller à l'état 325
+
+
+état 316
+
+   32 method_decl: type id $@5 parenthese_o param_list_opt parenthese_f throws_clause_opt block .
+
+    $défaut  réduction par utilisation de la règle 32 (method_decl)
+
+
+état 317
+
+   40 exception_list: exception_list virgule . type
+
+    mc_int      décalage et aller à l'état 13
+    mc_float    décalage et aller à l'état 14
+    mc_double   décalage et aller à l'état 15
+    mc_char     décalage et aller à l'état 16
+    mc_boolean  décalage et aller à l'état 17
+    mc_string   décalage et aller à l'état 18
+    mc_excp     décalage et aller à l'état 19
+    id          décalage et aller à l'état 147
+
+    type  aller à l'état 326
+
+
+état 318
+
+   89 for_statement: mc_for parenthese_o for_init_opt expression_opt pt_virgule for_update_opt parenthese_f statement .
+
+    $défaut  réduction par utilisation de la règle 89 (for_statement)
+
+
+état 319
+
+  102 case_statement: mc_case constant deux_points . statement_list_opt break_opt
+
+    mc_int        décalage et aller à l'état 13
+    mc_float      décalage et aller à l'état 14
+    mc_double     décalage et aller à l'état 15
+    mc_char       décalage et aller à l'état 16
+    mc_boolean    décalage et aller à l'état 17
+    mc_string     décalage et aller à l'état 18
+    mc_excp       décalage et aller à l'état 19
+    mc_if         décalage et aller à l'état 41
+    mc_for        décalage et aller à l'état 42
+    mc_while      décalage et aller à l'état 43
+    mc_do         décalage et aller à l'état 44
+    mc_switch     décalage et aller à l'état 45
+    mc_return     décalage et aller à l'état 46
+    mc_try        décalage et aller à l'état 47
+    mc_new        décalage et aller à l'état 48
+    mc_throw      décalage et aller à l'état 49
+    mc_this       décalage et aller à l'état 50
+    mc_true       décalage et aller à l'état 51
+    mc_false      décalage et aller à l'état 52
+    mc_print      décalage et aller à l'état 53
+    chaine        décalage et aller à l'état 54
+    caractere     décalage et aller à l'état 55
+    id            décalage et aller à l'état 56
+    integer       décalage et aller à l'état 57
+    real          décalage et aller à l'état 58
+    accolade_o    décalage et aller à l'état 59
+    parenthese_o  décalage et aller à l'état 60
+
+    $défaut  réduction par utilisation de la règle 65 (statement_list_opt)
+
+    var_decl              aller à l'état 61
+    type                  aller à l'état 62
+    type_array            aller à l'état 36
+    block                 aller à l'état 63
+    statement_list_opt    aller à l'état 327
+    statement_list        aller à l'état 65
+    statement             aller à l'état 66
+    postfix_statement     aller à l'état 67
+    if_statement          aller à l'état 68
+    while_statement       aller à l'état 69
+    do_statement          aller à l'état 70
+    for_statement         aller à l'état 71
+    switch_statement      aller à l'état 72
+    return_statement      aller à l'état 73
+    throw_statement       aller à l'état 74
+    try_catch_statement   aller à l'état 75
+    assignment_statement  aller à l'état 76
+    postfix_expression    aller à l'état 77
+    primary_expression    aller à l'état 78
+
+
+état 320
+
+  107 default_statement: mc_default deux_points . statement_list_opt
+
+    mc_int        décalage et aller à l'état 13
+    mc_float      décalage et aller à l'état 14
+    mc_double     décalage et aller à l'état 15
+    mc_char       décalage et aller à l'état 16
+    mc_boolean    décalage et aller à l'état 17
+    mc_string     décalage et aller à l'état 18
+    mc_excp       décalage et aller à l'état 19
+    mc_if         décalage et aller à l'état 41
+    mc_for        décalage et aller à l'état 42
+    mc_while      décalage et aller à l'état 43
+    mc_do         décalage et aller à l'état 44
+    mc_switch     décalage et aller à l'état 45
+    mc_return     décalage et aller à l'état 46
+    mc_try        décalage et aller à l'état 47
+    mc_new        décalage et aller à l'état 48
+    mc_throw      décalage et aller à l'état 49
+    mc_this       décalage et aller à l'état 50
+    mc_true       décalage et aller à l'état 51
+    mc_false      décalage et aller à l'état 52
+    mc_print      décalage et aller à l'état 53
+    chaine        décalage et aller à l'état 54
+    caractere     décalage et aller à l'état 55
+    id            décalage et aller à l'état 56
+    integer       décalage et aller à l'état 57
+    real          décalage et aller à l'état 58
+    accolade_o    décalage et aller à l'état 59
+    parenthese_o  décalage et aller à l'état 60
+
+    $défaut  réduction par utilisation de la règle 65 (statement_list_opt)
+
+    var_decl              aller à l'état 61
+    type                  aller à l'état 62
+    type_array            aller à l'état 36
+    block                 aller à l'état 63
+    statement_list_opt    aller à l'état 328
+    statement_list        aller à l'état 65
+    statement             aller à l'état 66
+    postfix_statement     aller à l'état 67
+    if_statement          aller à l'état 68
+    while_statement       aller à l'état 69
+    do_statement          aller à l'état 70
+    for_statement         aller à l'état 71
+    switch_statement      aller à l'état 72
+    return_statement      aller à l'état 73
+    throw_statement       aller à l'état 74
+    try_catch_statement   aller à l'état 75
+    assignment_statement  aller à l'état 76
+    postfix_expression    aller à l'état 77
+    primary_expression    aller à l'état 78
+
+
+état 321
+
+   97 switch_statement: mc_switch parenthese_o expression parenthese_f accolade_o case_list_opt default_statement_opt accolade_f .
+
+    $défaut  réduction par utilisation de la règle 97 (switch_statement)
+
+
+état 322
+
+  122 catch_clause: mc_catch parenthese_o type id parenthese_f $@8 . block
+
+    accolade_o  décalage et aller à l'état 26
+
+    block  aller à l'état 329
+
+
+état 323
+
+  173 primary_expression: mc_new type crochet_o expression crochet_f crochet_o expression crochet_f .
+
+    $défaut  réduction par utilisation de la règle 173 (primary_expression)
+
+
+état 324
+
+   26 method_decl: visibility_static mc_void id $@2 parenthese_o param_list_opt parenthese_f throws_clause_opt block .
+
+    $défaut  réduction par utilisation de la règle 26 (method_decl)
+
+
+état 325
+
+   28 method_decl: visibility_static type id $@3 parenthese_o param_list_opt parenthese_f throws_clause_opt block .
+
+    $défaut  réduction par utilisation de la règle 28 (method_decl)
+
+
+état 326
+
+   40 exception_list: exception_list virgule type .
+
+    $défaut  réduction par utilisation de la règle 40 (exception_list)
+
+
+état 327
+
+  102 case_statement: mc_case constant deux_points statement_list_opt . break_opt
+
+    mc_break  décalage et aller à l'état 330
+
+    $défaut  réduction par utilisation de la règle 103 (break_opt)
+
+    break_opt  aller à l'état 331
+
+
+état 328
+
+  107 default_statement: mc_default deux_points statement_list_opt .
+
+    $défaut  réduction par utilisation de la règle 107 (default_statement)
+
+
+état 329
+
+  122 catch_clause: mc_catch parenthese_o type id parenthese_f $@8 block .
+
+    $défaut  réduction par utilisation de la règle 122 (catch_clause)
+
+
+état 330
+
+  104 break_opt: mc_break . pt_virgule
+
+    pt_virgule  décalage et aller à l'état 332
+
+
+état 331
+
+  102 case_statement: mc_case constant deux_points statement_list_opt break_opt .
+
+    $défaut  réduction par utilisation de la règle 102 (case_statement)
+
+
+état 332
+
+  104 break_opt: mc_break pt_virgule .
+
+    $défaut  réduction par utilisation de la règle 104 (break_opt)

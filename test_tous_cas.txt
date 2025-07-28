@@ -1,0 +1,196 @@
+/*
+Université des Sciences et de la Technologie Houari Boumediene
+Faculté d’Informatique
+Master 1 : IL-IV
+Année Universitaire : 2024/2025
+Module Compilation
+Test complet du langage Java simplifié
+*/
+
+class Util {
+    // Méthode statique pour calculer la somme de deux entiers
+    boolean flag = true;
+
+    
+    
+    public void func(int a, int b) {
+
+        a = y + 1 ; 
+        b = a - 1;
+
+        x = y * 1;
+
+        return;
+        
+    }
+    public static int sum(int a, int b) {
+        return a + b;
+        
+    }
+}
+
+class Sample {
+    int x;
+    int y;
+    
+    // Constructeur
+    public Sample() {
+        
+    }
+    
+    // Méthode d'instance pour afficher les valeurs
+    public void printValues() {
+        System.out.println("Sample : (" + x + ", " + y + ")");
+        
+    }
+    
+    // Méthode d'instance pour incrémenter les valeurs
+    public void incrementValues() {
+        this.x += 1;
+        this.y += 1;
+    }
+    
+    // Méthode de division avec gestion d'exception
+    public int divide(int a, int b) throws Exception {
+        if (b == 0) {
+            throw new Exception("Division par zéro");
+        }
+        return a / b;
+
+    }
+}
+class Point {
+    int x;
+    int y;
+    
+    // Constructeur de la classe Point
+    public Point(int x, int y) {
+        this.x = x;
+        this.y = y;
+        
+    }
+    
+    // Méthode pour déplacer le point en utilisant l'opérateur composé (+=)
+    public void deplacer(int dx, int dy) {
+        this.x += dx;
+        this.y += dy;
+    }
+    
+    // Méthode pour afficher les coordonnées du point
+    public void afficher() {
+        System.out.println("Point : (" + x + ", " + y + ")");
+    }
+}
+
+class TestTotal {
+    
+    public static void main(String[] args) {
+    
+        int[] r = new int[9];
+        int[][] xc = new int[9][3];
+    
+        // r[1] = 5;  
+        // Déclaration et initialisation de variables de types de base
+        int a = 10;
+        int b = 6;
+
+        float f = 3.14f;
+        float d = 20.0;
+        char c = 'F';
+        int s=3; 
+        boolean flag = true;
+
+        x = 0 + a;
+        u = x + 2;
+        b = a - a;
+
+        t1 = a + b;
+        t2 = c * t1;
+        t3 = a + b; // Redondant, car déjà calculé dans t1
+        t4 = t3 * e;
+
+        System.out.println("Debut du test complet du langage Java simplifie");
+
+        System.out.println("Variables: a = " + a + ", f = " + f + ", d = " + d + ", c = " + c + ", flag = " + flag);
+        // Opérations arithmétiques
+        int add = a + 5;
+        int sub = a - 3;
+        int mult = a * 2;
+        float div = d / 4.0;
+        int mod = a % 3;  // Utilisation de l'opérateur composé +=
+        System.out.println("Arithmétiques: add = " + add + ", sub = " + sub +
+                           ", mult = " + mult + ", div = " + div +
+                           ", mod = " + mod + ", a (après +=2) = " + a);
+
+        // Opérations logiques et conditionnelles
+        if (flag && (a > 10)) {
+            System.out.println("if: flag est vrai et a > 10");
+            
+        } else if (!flag || (a <= 10)) {
+            System.out.println("else if: flag est faux ou a <= 10");
+        } else {
+            System.out.println("else: cas par défaut");
+        }
+
+        // Structure switch-case
+        switch (a) {
+            case 10:
+                System.out.println("a vaut 10");
+                break;  // prbl: il connait ca meme avant la declaration de break dans lexical
+            case 12:
+                System.out.println("a vaut 12");
+                break;
+            default:
+                System.out.println("a n'est ni 10 ni 12");
+        }
+
+        // Boucles
+        // Boucle for
+        for (int i = 0; i < 3; i++) {
+            System.out.println("Boucle for: i = " + i);
+        }
+        // Boucle while
+        int i = 0;
+        while (i < 3) {
+            System.out.println("Boucle while: i = " + i);
+            i++;
+        }
+        
+        // Boucle do-while
+        int j = 0;
+        do {
+            System.out.println("Boucle do-while: j = " + j);
+            j++;
+        } while (j < 3);
+
+        // Appel d'une méthode statique
+        int resStatic = Util.sum(5, 7);
+        System.out.println("Résultat de Util.sum(5, 7) = " + resStatic);
+
+        // Création d'objet et appel de méthodes d'instance
+        Sample si = new Sample();
+        si.printValues();
+        si.incrementValues();
+        si.printValues();
+
+        // Test de création d'objet avec constructeur et utilisation de 'this'
+        Point p = new Point(3, 4);
+        p.afficher();
+        p.deplacer(1, -1);
+        p.afficher();
+        
+        // Gestion d'exception : test de throw et throws via une méthode
+        try {
+            int quotient = si.divide(100, 0);  // Division par zéro, doit lancer une exception
+            System.out.println("Quotient = " + quotient);
+        } catch (Exception e) {
+            System.out.println("Exception capturée : " + "message d'erreur");
+        } finally {
+            System.out.println("Bloc finally exécuté");
+        }
+
+        System.out.println("Fin du test complet");
+        
+    }
+
+}

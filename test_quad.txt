@@ -1,0 +1,77 @@
+
+class Point {
+    int x;
+    int y;
+
+    void setX(int v) {
+        x = v;
+    }
+
+    int getX() {
+        return x;
+    }
+}
+
+class TestCombined {
+    public static void main(String[] args) {
+        // Variable declarations
+        int a = 10;
+        b = 5;
+        sum = 0;
+        int i;
+        boolean result;
+        Point p = new Point();
+
+        // Arithmetic expressions (simple and complex)
+        c = a + b;                    // Simple addition
+        a = c - b;                    // Simple subtraction
+        k = (a + b) * (c - d) / (c * 2); // Complex expression
+
+        // Conditional expressions
+        result = a < b;               // Less than
+        result = a > b;               // Greater than 
+        result = a != b;              // Not equal
+        result = a <= b;              // Less than or equal
+        result = a >= b;              // Greater than or equal
+        result = (a < b) && (a != b); // Logical AND
+        result = (a > b) || (a == b); // Logical OR
+        result = (a * 2 == b) || (c / 3 <= a + 1) && !(b != 10); // Complex conditional
+
+        // Object manipulation
+        p.x = 5;                      // Set field
+        p.y = 10;                     // Set field
+        a = p.x;                      // Get field
+        b = p.y;                      // Get field
+
+        // Method calls
+        p.setX();                   // Call void method
+        k = p.getX();                 // Call method with return
+
+        // If statement
+        if (a < b) {
+            result = true;
+        }
+
+        // If-else-if-else statement
+        if (a + b >= c && !(b == 10)) {
+            result = false;
+        } else if ((a * 2 <= b + c) || (c / 3 > a)) {
+            result = true;
+        } else {
+            result = false;
+        }
+
+        // For loop
+        for (i = 0; i < 5; i++) {
+            sum = sum + i;
+        }
+
+        // While loop
+        i = 0;
+        while (i < 5) {
+            sum = sum + i;
+            i++;
+        }
+    }
+}
+

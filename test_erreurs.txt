@@ -1,0 +1,95 @@
+/*
+class TestErreurs {
+
+    boolean bool = true; 
+    int x=2;              // déclaration valide
+    int x;              // ERREUR : Variable double déclarée
+
+    void methode2() {
+        int c = 10;
+
+        f=8;       // ERREUR : Variable non déclarée
+
+        int r = "il m1";  // ERREUR : Incompatibilité de type
+        
+      //  int res = c / 0;  // ERREUR : Division par zéro
+    }
+
+    void methode3() {
+        int[] tab = new int[-3]; // ERREUR : Tableau (taille invalide)
+        float[] tab2 = new float[5.5f]; // ERREUR : Tableau (type d'element invalide) 
+    }
+
+    float methode4() {
+        return "Hello"; // ERREUR : Méthode (type de retour invalide)  (attendu : float)
+    }
+
+    int somme(int a, int b) {
+        {
+            int b = 3; // ERREUR : Portée des paramètres et variables locales des méthodes
+                                    // redéclaration du paramètre dans une portée imbriquée
+        }
+        return a + b;
+    }
+
+}
+
+*/
+
+
+     
+
+class Point {
+    int x;
+    void setX(int v) { x = v; }
+    int getX() { return x; }
+}
+
+class TestCall {
+    public static void main(String[] args) {
+// Test methodes
+        Point p = new Point();
+        int a;
+        p.setX(42);
+        a = p.getX();
+        Point p;
+        int a, b;
+
+// TEST OBJETS
+        // Instanciation d'objet
+        p = new Point();
+
+        // Affectation de champs
+        p.x = 5;
+        p.y = 10;
+
+        // Lecture de champs
+        a = p.x;
+        b = p.y;
+// TEST AND & IF ELSE
+        int a = 1;
+        int b = 2;
+        int c = 3;
+        if ((a > 0 && b < 5) || c == 3) {
+            a = 100;
+        } else {
+            a = 200;
+        }
+// TEST AND OR  & IF ELSE
+           int a = 1;
+        int b = 2;
+        if (a > 0 && b < 5) {
+            a = 10;
+        } else {
+            a = 20;
+        }
+// TEST OR  & IF ELSE
+         int a = 1;
+        int b = 2;
+        if (a > 0 || b < 5) {
+            a = 10;
+        } else {
+            a = 20;
+        }
+    }
+}
