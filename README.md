@@ -4,17 +4,17 @@ This project is a simplified Java compiler developed using **Flex** and **Bison*
 
 ---
 
-## ✅ Features
+## Features
 
 - **Lexical analysis** with Flex  
 - **Syntax analysis** with Bison  
 - **Symbol table management**  
 - **Support for**:
-  - Class, method, and constructor declarations  
-  - Control structures
-  - Expressions: arithmetic, logical, assignment, method calls etc
-  - Arrays and matrices  
-  - Exceptions handling  
+  Class, method, and constructor declarations  
+  Control structures
+  Expressions: arithmetic, logical, assignment, method calls etc
+  Arrays and matrices  
+  Exceptions handling  
 - **Type and scope tracking**  
 - 🧪 Error reporting (syntax and undeclared identifiers)
 
